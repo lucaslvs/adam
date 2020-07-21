@@ -6,13 +6,15 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
 
   @create_attrs %{
     label: "some label",
+    scheduled_at: ~N[2010-04-17 14:00:00],
     state: "some state"
   }
   @update_attrs %{
     label: "some updated label",
+    scheduled_at: ~N[2011-05-18 15:01:01],
     state: "some updated state"
   }
-  @invalid_attrs %{label: nil, state: nil}
+  @invalid_attrs %{label: nil, scheduled_at: nil, state: nil}
 
   def fixture(:transmission) do
     {:ok, transmission} = Communication.create_transmission(@create_attrs)
@@ -40,6 +42,7 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
       assert %{
                "id" => id,
                "label" => "some label",
+               "scheduled_at" => "2010-04-17T14:00:00",
                "state" => "some state"
              } = json_response(conn, 200)["data"]
     end
@@ -62,6 +65,7 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
       assert %{
                "id" => id,
                "label" => "some updated label",
+               "scheduled_at" => "2011-05-18T15:01:01",
                "state" => "some updated state"
              } = json_response(conn, 200)["data"]
     end
