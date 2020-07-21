@@ -7,6 +7,10 @@ defmodule AdamWeb.Router do
 
   scope "/api", AdamWeb do
     pipe_through :api
+
+    scope "/v1", V1, as: :v1 do
+      resources "/transmissions", TransmissionController, except: [:new, :edit]
+    end
   end
 
   # Enables LiveDashboard only for development
