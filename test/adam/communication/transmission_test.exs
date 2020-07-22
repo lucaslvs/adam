@@ -72,4 +72,48 @@ defmodule Adam.Communication.TransmissionTest do
       end)
     end
   end
+
+  describe "to_cancel/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "transmitted"),
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "incomplete"),
+        insert(:transmission, state: "failure")
+      ]
+
+      scheduled = insert(:transmission)
+      performing = insert(:transmission, state: "performing")
+
+      {:ok, performing: performing, scheduled: scheduled, transmissions: transmissions}
+    end
+
+    test "should transition to 'canceled' when receiving a 'performing' transmission", %{
+      performing: transmission
+    } do
+      assert {:ok, %Transmission{} = received} = Transmission.to_cancel(transmission)
+      assert received.id == transmission.id
+      assert received.scheduled_at == transmission.scheduled_at
+      assert received.state == "canceled"
+    end
+
+    test "should transition to 'canceled' when receiving a 'scheduled' transmission", %{
+      scheduled: transmission
+    } do
+      assert {:ok, %Transmission{} = received} = Transmission.to_cancel(transmission)
+      assert received.id == transmission.id
+      assert received.scheduled_at == transmission.scheduled_at
+      assert received.state == "canceled"
+    end
+
+    test "should not transition to 'canceled' when receiving a transmission that is not `scheduled` or `performing`", %{
+      transmissions: transmissions
+    } do
+      Enum.each(transmissions, fn transmission ->
+        assert {:error, "Transition to this state isn't declared."} =
+                 Transmission.to_perform(transmission)
+      end)
+    end
+  end
 end
