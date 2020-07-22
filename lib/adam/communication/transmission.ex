@@ -15,12 +15,12 @@ defmodule Adam.Communication.Transmission do
   def changeset(transmission, attrs) do
     transmission
     |> cast(attrs, [:label, :state, :scheduled_at])
-    |> validate_required([:label, :state])
-    |> put_scheduled_at()
+    |> validate_required([:label])
+    |> maybe_schedule_for_now()
   end
 
-  def to_progress(transmission) do
-    transition_to(transmission, "in_progress")
+  def to_perform(transmission) do
+    transition_to(transmission, "performing")
   end
 
   def to_cancel(transmission) do
@@ -51,7 +51,7 @@ defmodule Adam.Communication.Transmission do
     Machinery.transition_to(transmission, __MODULE__.Machinery, next_state)
   end
 
-  defp put_scheduled_at(changeset) do
+  defp maybe_schedule_for_now(changeset) do
     case changeset do
       %Ecto.Changeset{changes: %{scheduled_at: _scheduled_at}} ->
         changeset

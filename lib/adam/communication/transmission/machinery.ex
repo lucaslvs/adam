@@ -2,7 +2,7 @@ defmodule Adam.Communication.Transmission.Machinery do
   use Machinery,
     states: [
       "scheduled",
-      "in_progress",
+      "performing",
       "transmitted",
       "partial",
       "complete",
@@ -11,8 +11,8 @@ defmodule Adam.Communication.Transmission.Machinery do
       "failure"
     ],
     transitions: %{
-      "scheduled" => ["in_progress", "canceled"],
-      "in_progress" => ["transmitted", "canceled"],
+      "scheduled" => ["performing", "canceled"],
+      "performing" => ["transmitted", "canceled"],
       "transmitted" => ["partial", "complete", "incomplete"],
       "partial" => "complete",
       "incomplete" => ["partial", "complete"],
@@ -30,9 +30,10 @@ defmodule Adam.Communication.Transmission.Machinery do
     transmission
   end
 
-  def guard_transition(%Transmission{scheduled_at: scheduled_at} = transmission, "in_progress") do
+  def guard_transition(%Transmission{scheduled_at: scheduled_at} = transmission, "performing") do
     if scheduled_at > NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second) do
-      message = "Cannot be in_progress as it is scheduled to #{NaiveDateTime.to_string(scheduled_at)}"
+      message =
+        "Cannot perform because it is scheduled to #{NaiveDateTime.to_string(scheduled_at)}"
 
       {:error, message}
     else

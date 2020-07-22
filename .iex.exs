@@ -1,3 +1,4 @@
+import Adam.Factory
 import Ecto.Changeset
 import Ecto.Query, warn: false
 
