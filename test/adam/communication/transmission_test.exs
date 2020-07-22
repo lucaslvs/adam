@@ -198,4 +198,58 @@ defmodule Adam.Communication.TransmissionTest do
       end)
     end
   end
+
+  describe "to_complete/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "canceled"),
+        insert(:transmission, state: "failure")
+      ]
+
+      transmitted = insert(:transmission, state: "transmitted")
+      partial = insert(:transmission, state: "partial")
+      incomplete = insert(:transmission, state: "incomplete")
+
+      {:ok, transmitted: transmitted, partial: partial, incomplete: incomplete, transmissions: transmissions}
+    end
+
+    test "should transition to 'complete' when receiving a 'transmitted' transmission", %{
+      transmitted: transmission
+    } do
+      assert {:ok, %Transmission{} = received} = Transmission.to_complete(transmission)
+      assert received.id == transmission.id
+      assert received.scheduled_at == transmission.scheduled_at
+      assert received.state == "complete"
+    end
+
+    test "should transition to 'complete' when receiving a 'partial' transmission", %{
+      partial: transmission
+    } do
+      assert {:ok, %Transmission{} = received} = Transmission.to_complete(transmission)
+      assert received.id == transmission.id
+      assert received.scheduled_at == transmission.scheduled_at
+      assert received.state == "complete"
+    end
+
+    test "should transition to 'complete' when receiving a 'incomplete' transmission", %{
+      incomplete: transmission
+    } do
+      assert {:ok, %Transmission{} = received} = Transmission.to_complete(transmission)
+      assert received.id == transmission.id
+      assert received.scheduled_at == transmission.scheduled_at
+      assert received.state == "complete"
+    end
+
+    test "should not transition to 'complete' when receiving a transmission that is not 'transmitted', 'partial' or 'incomplete'", %{
+      transmissions: transmissions
+    } do
+      Enum.each(transmissions, fn transmission ->
+        assert {:error, "Transition to this state isn't declared."} =
+                 Transmission.to_complete(transmission)
+      end)
+    end
+  end
 end
