@@ -32,7 +32,7 @@ defmodule Adam.Communication.TransmissionTest do
         insert(:transmission, state: "complete"),
         insert(:transmission, state: "incomplete"),
         insert(:transmission, state: "canceled"),
-        insert(:transmission, state: "failure"),
+        insert(:transmission, state: "failure")
       ]
 
       scheduled_at =
@@ -45,21 +45,31 @@ defmodule Adam.Communication.TransmissionTest do
       {:ok, transmission: insert(:transmission), scheduled: scheduled, unscheduled: unscheduled}
     end
 
-    test "should transition to 'performing' when receiving a 'scheduled' transmission", %{transmission: transmission} do
+    test "should transition to 'performing' when receiving a 'scheduled' transmission", %{
+      transmission: transmission
+    } do
       assert {:ok, %Transmission{} = received} = Transmission.to_perform(transmission)
       assert received.id == transmission.id
       assert received.scheduled_at == transmission.scheduled_at
       assert received.state == "performing"
     end
 
-    test "should not transition to 'performing' when receiving a 'scheduled' transmission when the scheduling time has not arrived", %{scheduled: scheduled} do
+    test "should not transition to 'performing' when receiving a 'scheduled' transmission when the scheduling time has not arrived",
+         %{scheduled: scheduled} do
       assert {:error, reason} = Transmission.to_perform(scheduled)
-      assert reason = "Cannot perform because it is scheduled to #{NaiveDateTime.to_string(scheduled.scheduled_at)}"
+
+      assert reason =
+               "Cannot perform because it is scheduled to #{
+                 NaiveDateTime.to_string(scheduled.scheduled_at)
+               }"
     end
 
-    test "should not transition to 'performing' when receiving a unscheduled transmission", %{unscheduled: unscheduled} do
+    test "should not transition to 'performing' when receiving a unscheduled transmission", %{
+      unscheduled: unscheduled
+    } do
       Enum.each(unscheduled, fn transmission ->
-        assert {:error, "Transition to this state isn't declared."} = Transmission.to_perform(transmission)
+        assert {:error, "Transition to this state isn't declared."} =
+                 Transmission.to_perform(transmission)
       end)
     end
   end
