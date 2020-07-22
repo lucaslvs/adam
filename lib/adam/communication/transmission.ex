@@ -19,35 +19,35 @@ defmodule Adam.Communication.Transmission do
     |> put_scheduled_at()
   end
 
-  def to_progress(%__MODULE__{} = transmission) do
+  def to_progress(transmission) do
     transition_to(transmission, "in_progress")
   end
 
-  def to_cancel(%__MODULE__{} = transmission) do
+  def to_cancel(transmission) do
     transition_to(transmission, "canceled")
   end
 
-  def to_transmit(%__MODULE__{} = transmission) do
+  def to_transmit(transmission) do
     transition_to(transmission, "transmitted")
   end
 
-  def to_partial(%__MODULE__{} = transmission) do
+  def to_partial(transmission) do
     transition_to(transmission, "partial")
   end
 
-  def to_complete(%__MODULE__{} = transmission) do
+  def to_complete(transmission) do
     transition_to(transmission, "complete")
   end
 
-  def to_incomplete(%__MODULE__{} = transmission) do
+  def to_incomplete(transmission) do
     transition_to(transmission, "incomplete")
   end
 
-  def to_failure(%__MODULE__{} = transmission) do
+  def to_failure(transmission) do
     transition_to(transmission, "failure")
   end
 
-  defp transition_to(transmission, next_state) when is_binary(next_state) do
+  defp transition_to(%__MODULE__{} = transmission, next_state) when is_binary(next_state) do
     Machinery.transition_to(transmission, __MODULE__.Machinery, next_state)
   end
 
