@@ -108,9 +108,10 @@ defmodule Adam.Communication.TransmissionTest do
       assert received.state == "canceled"
     end
 
-    test "should not transition to 'canceled' when receiving a transmission that is not 'scheduled' or 'performing'", %{
-      transmissions: transmissions
-    } do
+    test "should not transition to 'canceled' when receiving a transmission that is not 'scheduled' or 'performing'",
+         %{
+           transmissions: transmissions
+         } do
       Enum.each(transmissions, fn transmission ->
         assert {:error, "Transition to this state isn't declared."} =
                  Transmission.to_cancel(transmission)
@@ -144,9 +145,10 @@ defmodule Adam.Communication.TransmissionTest do
       assert received.state == "transmitted"
     end
 
-    test "should not transition to 'transmitted' when receiving a transmission that is not 'performing'", %{
-      transmissions: transmissions
-    } do
+    test "should not transition to 'transmitted' when receiving a transmission that is not 'performing'",
+         %{
+           transmissions: transmissions
+         } do
       Enum.each(transmissions, fn transmission ->
         assert {:error, "Transition to this state isn't declared."} =
                  Transmission.to_transmit(transmission)
@@ -189,9 +191,10 @@ defmodule Adam.Communication.TransmissionTest do
       assert received.state == "partial"
     end
 
-    test "should not transition to 'partial' when receiving a transmission that is not 'transmitted' or 'incomplete'", %{
-      transmissions: transmissions
-    } do
+    test "should not transition to 'partial' when receiving a transmission that is not 'transmitted' or 'incomplete'",
+         %{
+           transmissions: transmissions
+         } do
       Enum.each(transmissions, fn transmission ->
         assert {:error, "Transition to this state isn't declared."} =
                  Transmission.to_partial(transmission)
@@ -213,7 +216,11 @@ defmodule Adam.Communication.TransmissionTest do
       partial = insert(:transmission, state: "partial")
       incomplete = insert(:transmission, state: "incomplete")
 
-      {:ok, transmitted: transmitted, partial: partial, incomplete: incomplete, transmissions: transmissions}
+      {:ok,
+       transmitted: transmitted,
+       partial: partial,
+       incomplete: incomplete,
+       transmissions: transmissions}
     end
 
     test "should transition to 'complete' when receiving a 'transmitted' transmission", %{
@@ -243,9 +250,10 @@ defmodule Adam.Communication.TransmissionTest do
       assert received.state == "complete"
     end
 
-    test "should not transition to 'complete' when receiving a transmission that is not 'transmitted', 'partial' or 'incomplete'", %{
-      transmissions: transmissions
-    } do
+    test "should not transition to 'complete' when receiving a transmission that is not 'transmitted', 'partial' or 'incomplete'",
+         %{
+           transmissions: transmissions
+         } do
       Enum.each(transmissions, fn transmission ->
         assert {:error, "Transition to this state isn't declared."} =
                  Transmission.to_complete(transmission)
@@ -279,9 +287,10 @@ defmodule Adam.Communication.TransmissionTest do
       assert received.state == "incomplete"
     end
 
-    test "should not transition to 'incomplete' when receiving a transmission that is not 'transmitted'", %{
-      transmissions: transmissions
-    } do
+    test "should not transition to 'incomplete' when receiving a transmission that is not 'transmitted'",
+         %{
+           transmissions: transmissions
+         } do
       Enum.each(transmissions, fn transmission ->
         assert {:error, "Transition to this state isn't declared."} =
                  Transmission.to_incomplete(transmission)
@@ -321,7 +330,7 @@ defmodule Adam.Communication.TransmissionTest do
       failure: transmission
     } do
       assert {:error, "Transition to this state isn't declared."} =
-        Transmission.to_incomplete(transmission)
+               Transmission.to_incomplete(transmission)
     end
   end
 end
