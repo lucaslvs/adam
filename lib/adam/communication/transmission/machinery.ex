@@ -32,8 +32,8 @@ defmodule Adam.Communication.Transmission.Machinery do
 
   def guard_transition(%Transmission{scheduled_at: scheduled_at} = transmission, "performing") do
     if scheduled_at > NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second) do
-      message =
-        "Cannot perform because it is scheduled to #{NaiveDateTime.to_string(scheduled_at)}"
+      scheduled_at = NaiveDateTime.to_string(scheduled_at)
+      message = "Cannot perform because it is scheduled to #{scheduled_at}"
 
       {:error, message}
     else
