@@ -108,7 +108,7 @@ defmodule Adam.Communication.TransmissionTest do
       assert received.state == "canceled"
     end
 
-    test "should not transition to 'canceled' when receiving a transmission that is not `scheduled` or `performing`", %{
+    test "should not transition to 'canceled' when receiving a transmission that is not 'scheduled' or 'performing'", %{
       transmissions: transmissions
     } do
       Enum.each(transmissions, fn transmission ->
@@ -144,12 +144,57 @@ defmodule Adam.Communication.TransmissionTest do
       assert received.state == "transmitted"
     end
 
-    test "should not transition to 'transmitted' when receiving a transmission that is not `performing`", %{
+    test "should not transition to 'transmitted' when receiving a transmission that is not 'performing'", %{
       transmissions: transmissions
     } do
       Enum.each(transmissions, fn transmission ->
         assert {:error, "Transition to this state isn't declared."} =
                  Transmission.to_transmit(transmission)
+      end)
+    end
+  end
+
+  describe "to_partial/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "canceled"),
+        insert(:transmission, state: "failure")
+      ]
+
+      transmitted = insert(:transmission, state: "transmitted")
+      incomplete = insert(:transmission, state: "incomplete")
+
+      {:ok, transmitted: transmitted, incomplete: incomplete, transmissions: transmissions}
+    end
+
+    test "should transition to 'partial' when receiving a 'transmitted' transmission", %{
+      transmitted: transmission
+    } do
+      assert {:ok, %Transmission{} = received} = Transmission.to_partial(transmission)
+      assert received.id == transmission.id
+      assert received.scheduled_at == transmission.scheduled_at
+      assert received.state == "partial"
+    end
+
+    test "should transition to 'partial' when receiving a 'incomplete' transmission", %{
+      incomplete: transmission
+    } do
+      assert {:ok, %Transmission{} = received} = Transmission.to_partial(transmission)
+      assert received.id == transmission.id
+      assert received.scheduled_at == transmission.scheduled_at
+      assert received.state == "partial"
+    end
+
+    test "should not transition to 'partial' when receiving a transmission that is not 'transmitted' or 'incomplete'", %{
+      transmissions: transmissions
+    } do
+      Enum.each(transmissions, fn transmission ->
+        assert {:error, "Transition to this state isn't declared."} =
+                 Transmission.to_partial(transmission)
       end)
     end
   end
