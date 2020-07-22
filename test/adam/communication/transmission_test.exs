@@ -288,4 +288,40 @@ defmodule Adam.Communication.TransmissionTest do
       end)
     end
   end
+
+  describe "to_failure/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "transmitted"),
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "incomplete"),
+        insert(:transmission, state: "canceled")
+      ]
+
+      failure = insert(:transmission, state: "failure")
+
+      {:ok, failure: failure, transmissions: transmissions}
+    end
+
+    test "should transition to 'failure' when receiving a transmission that is not `failure`", %{
+      transmissions: transmissions
+    } do
+      Enum.each(transmissions, fn transmission ->
+        assert {:ok, %Transmission{} = received} = Transmission.to_failure(transmission)
+        assert received.id == transmission.id
+        assert received.scheduled_at == transmission.scheduled_at
+        assert received.state == "failure"
+      end)
+    end
+
+    test "should not transition to 'failure' when receiving a `failure` transmission", %{
+      failure: transmission
+    } do
+      assert {:error, "Transition to this state isn't declared."} =
+        Transmission.to_incomplete(transmission)
+    end
+  end
 end
