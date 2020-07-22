@@ -58,10 +58,9 @@ defmodule Adam.Communication.TransmissionTest do
          %{scheduled: scheduled} do
       assert {:error, reason} = Transmission.to_perform(scheduled)
 
-      assert reason =
-               "Cannot perform because it is scheduled to #{
-                 NaiveDateTime.to_string(scheduled.scheduled_at)
-               }"
+      scheduled_at = NaiveDateTime.to_string(scheduled.scheduled_at)
+
+      assert reason == "Cannot perform because it is scheduled to #{scheduled_at}"
     end
 
     test "should not transition to 'performing' when receiving a unscheduled transmission", %{
