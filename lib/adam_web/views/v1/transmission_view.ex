@@ -15,7 +15,7 @@ defmodule AdamWeb.V1.TransmissionView do
       id: transmission.id,
       label: transmission.label,
       state: transmission.state,
-      scheduled_at: NaiveDateTime.to_string(transmission.scheduled_at)
+      scheduled_at: transmission.scheduled_at
     }
   end
 end
