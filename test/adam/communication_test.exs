@@ -6,8 +6,16 @@ defmodule Adam.CommunicationTest do
   describe "transmissions" do
     alias Adam.Communication.Transmission
 
-    @valid_attrs %{label: "some label", scheduled_at: ~N[2010-04-17 14:00:00], state: "some state"}
-    @update_attrs %{label: "some updated label", scheduled_at: ~N[2011-05-18 15:01:01], state: "some updated state"}
+    @valid_attrs %{
+      label: "some label",
+      scheduled_at: ~N[2010-04-17 14:00:00],
+      state: "some state"
+    }
+    @update_attrs %{
+      label: "some updated label",
+      scheduled_at: ~N[2011-05-18 15:01:01],
+      state: "some updated state"
+    }
     @invalid_attrs %{label: nil, scheduled_at: nil, state: nil}
 
     def transmission_fixture(attrs \\ %{}) do
@@ -30,7 +38,9 @@ defmodule Adam.CommunicationTest do
     end
 
     test "create_transmission/1 with valid data creates a transmission" do
-      assert {:ok, %Transmission{} = transmission} = Communication.create_transmission(@valid_attrs)
+      assert {:ok, %Transmission{} = transmission} =
+               Communication.create_transmission(@valid_attrs)
+
       assert transmission.label == "some label"
       assert transmission.scheduled_at == ~N[2010-04-17 14:00:00]
       assert transmission.state == "some state"
@@ -42,7 +52,10 @@ defmodule Adam.CommunicationTest do
 
     test "update_transmission/2 with valid data updates the transmission" do
       transmission = transmission_fixture()
-      assert {:ok, %Transmission{} = transmission} = Communication.update_transmission(transmission, @update_attrs)
+
+      assert {:ok, %Transmission{} = transmission} =
+               Communication.update_transmission(transmission, @update_attrs)
+
       assert transmission.label == "some updated label"
       assert transmission.scheduled_at == ~N[2011-05-18 15:01:01]
       assert transmission.state == "some updated state"
@@ -50,7 +63,10 @@ defmodule Adam.CommunicationTest do
 
     test "update_transmission/2 with invalid data returns error changeset" do
       transmission = transmission_fixture()
-      assert {:error, %Ecto.Changeset{}} = Communication.update_transmission(transmission, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Communication.update_transmission(transmission, @invalid_attrs)
+
       assert transmission == Communication.get_transmission!(transmission.id)
     end
 

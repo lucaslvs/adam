@@ -56,8 +56,15 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
   describe "update transmission" do
     setup [:create_transmission]
 
-    test "renders transmission when data is valid", %{conn: conn, transmission: %Transmission{id: id} = transmission} do
-      conn = put(conn, Routes.v1_transmission_path(conn, :update, transmission), transmission: @update_attrs)
+    test "renders transmission when data is valid", %{
+      conn: conn,
+      transmission: %Transmission{id: id} = transmission
+    } do
+      conn =
+        put(conn, Routes.v1_transmission_path(conn, :update, transmission),
+          transmission: @update_attrs
+        )
+
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, Routes.v1_transmission_path(conn, :show, id))
@@ -71,7 +78,11 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, transmission: transmission} do
-      conn = put(conn, Routes.v1_transmission_path(conn, :update, transmission), transmission: @invalid_attrs)
+      conn =
+        put(conn, Routes.v1_transmission_path(conn, :update, transmission),
+          transmission: @invalid_attrs
+        )
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end

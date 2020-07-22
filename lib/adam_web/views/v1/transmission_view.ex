@@ -11,9 +11,11 @@ defmodule AdamWeb.V1.TransmissionView do
   end
 
   def render("transmission.json", %{transmission: transmission}) do
-    %{id: transmission.id,
+    %{
+      id: transmission.id,
       label: transmission.label,
       state: transmission.state,
-      scheduled_at: NaiveDateTime.to_string(transmission.scheduled_at)}
+      scheduled_at: NaiveDateTime.to_string(transmission.scheduled_at)
+    }
   end
 end

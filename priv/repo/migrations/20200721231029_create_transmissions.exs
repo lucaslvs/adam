@@ -9,6 +9,5 @@ defmodule Adam.Repo.Migrations.CreateTransmissions do
 
       timestamps()
     end
-
   end
 end

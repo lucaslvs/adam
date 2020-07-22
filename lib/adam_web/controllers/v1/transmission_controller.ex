@@ -12,7 +12,8 @@ defmodule AdamWeb.V1.TransmissionController do
   end
 
   def create(conn, %{"transmission" => transmission_params}) do
-    with {:ok, %Transmission{} = transmission} <- Communication.create_transmission(transmission_params) do
+    with {:ok, %Transmission{} = transmission} <-
+           Communication.create_transmission(transmission_params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.v1_transmission_path(conn, :show, transmission))
@@ -28,7 +29,8 @@ defmodule AdamWeb.V1.TransmissionController do
   def update(conn, %{"id" => id, "transmission" => transmission_params}) do
     transmission = Communication.get_transmission!(id)
 
-    with {:ok, %Transmission{} = transmission} <- Communication.update_transmission(transmission, transmission_params) do
+    with {:ok, %Transmission{} = transmission} <-
+           Communication.update_transmission(transmission, transmission_params) do
       render(conn, "show.json", transmission: transmission)
     end
   end
