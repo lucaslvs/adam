@@ -42,7 +42,8 @@ defmodule Adam.Communication.TransmissionTest do
 
       scheduled = insert(:transmission, scheduled_at: scheduled_at)
 
-      {:ok, transmission: insert(:transmission), scheduled: scheduled, transmissions: transmissions}
+      {:ok,
+       transmission: insert(:transmission), scheduled: scheduled, transmissions: transmissions}
     end
 
     test "should transition to 'performing' when receiving a 'scheduled' transmission", %{

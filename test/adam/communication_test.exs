@@ -27,7 +27,9 @@ defmodule Adam.CommunicationTest do
 
     test "get_transmission!/1 returns the transmission with given id" do
       transmission = insert(:transmission)
-      assert Communication.get_transmission!(transmission.id) == Transmission.load_states(transmission)
+
+      assert Communication.get_transmission!(transmission.id) ==
+               Transmission.load_states(transmission)
     end
 
     test "create_transmission/1 with valid data creates a transmission" do
@@ -60,7 +62,8 @@ defmodule Adam.CommunicationTest do
       assert {:error, %Ecto.Changeset{}} =
                Communication.update_transmission(transmission, @invalid_attrs)
 
-      assert Transmission.load_states(transmission) == Communication.get_transmission!(transmission.id)
+      assert Transmission.load_states(transmission) ==
+               Communication.get_transmission!(transmission.id)
     end
 
     test "delete_transmission/1 deletes the transmission" do

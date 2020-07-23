@@ -23,6 +23,7 @@ defmodule Adam.Communication.Transmission do
     |> maybe_schedule_for_now()
   end
 
+  @doc false
   def create_changeset(transmission, attrs) do
     transmission
     |> changeset(Map.take(attrs, [:label, :scheduled_at]))
