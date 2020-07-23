@@ -3,10 +3,14 @@ defmodule Adam.Communication.Transmission do
 
   import Ecto.Changeset
 
+  alias Adam.Information.TransmissionState
+
   schema "transmissions" do
     field :label, :string, null: false
     field :scheduled_at, :naive_datetime, null: false
     field :state, :string, default: "scheduled"
+
+    has_many :states, TransmissionState
 
     timestamps()
   end
@@ -17,6 +21,18 @@ defmodule Adam.Communication.Transmission do
     |> cast(attrs, [:label, :state, :scheduled_at])
     |> validate_required([:label])
     |> maybe_schedule_for_now()
+  end
+
+  def create_changeset(transmission, attrs) do
+    transmission
+    |> changeset(Map.take(attrs, [:label, :scheduled_at]))
+    |> add_scheduled_state()
+    |> cast_assoc(:states, with: &TransmissionState.changeset/2, required: true)
+  end
+
+  @doc false
+  def load_states(%__MODULE__{} = transmission) do
+    Adam.Repo.preload(transmission, :states)
   end
 
   def to_perform(transmission) do
@@ -48,7 +64,13 @@ defmodule Adam.Communication.Transmission do
   end
 
   defp transition_to(%__MODULE__{} = transmission, next_state) when is_binary(next_state) do
-    Machinery.transition_to(transmission, __MODULE__.Machinery, next_state)
+    case Machinery.transition_to(transmission, __MODULE__.Machinery, next_state) do
+      {:error, message} ->
+        {:error, message, transmission}
+
+      result ->
+        result
+    end
   end
 
   defp maybe_schedule_for_now(changeset) do
@@ -60,5 +82,9 @@ defmodule Adam.Communication.Transmission do
         scheduled_at = NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
         put_change(changeset, :scheduled_at, scheduled_at)
     end
+  end
+
+  defp add_scheduled_state(changeset) do
+    put_change(changeset, :states, [%{value: "scheduled"}])
   end
 end

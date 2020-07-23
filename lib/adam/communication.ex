@@ -4,8 +4,8 @@ defmodule Adam.Communication do
   """
 
   import Ecto.Query, warn: false
-  alias Adam.Repo
 
+  alias Adam.Repo
   alias Adam.Communication.Transmission
 
   @doc """
@@ -18,7 +18,9 @@ defmodule Adam.Communication do
 
   """
   def list_transmissions do
-    Repo.all(Transmission)
+    Transmission
+    |> Repo.all()
+    |> Enum.map(&Transmission.load_states/1)
   end
 
   @doc """
@@ -35,7 +37,11 @@ defmodule Adam.Communication do
       ** (Ecto.NoResultsError)
 
   """
-  def get_transmission!(id), do: Repo.get!(Transmission, id)
+  def get_transmission!(id) do
+    Transmission
+    |> Repo.get!(id)
+    |> Transmission.load_states()
+  end
 
   @doc """
   Creates a transmission.
@@ -51,7 +57,7 @@ defmodule Adam.Communication do
   """
   def create_transmission(attrs \\ %{}) do
     %Transmission{}
-    |> Transmission.changeset(attrs)
+    |> Transmission.create_changeset(attrs)
     |> Repo.insert()
   end
 

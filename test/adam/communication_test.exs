@@ -29,7 +29,7 @@ defmodule Adam.CommunicationTest do
 
     test "list_transmissions/0 returns all transmissions" do
       transmission = transmission_fixture()
-      assert Communication.list_transmissions() == [transmission]
+      assert Communication.list_transmissions() == [Transmission.load_states(transmission)]
     end
 
     test "get_transmission!/1 returns the transmission with given id" do
@@ -43,7 +43,7 @@ defmodule Adam.CommunicationTest do
 
       assert transmission.label == "some label"
       assert transmission.scheduled_at == ~N[2010-04-17 14:00:00]
-      assert transmission.state == "some state"
+      assert transmission.state == "scheduled"
     end
 
     test "create_transmission/1 with invalid data returns error changeset" do

@@ -25,7 +25,7 @@ defmodule Adam.Communication.TransmissionTest do
 
   describe "to_perform/1" do
     setup do
-      unscheduled = [
+      transmissions = [
         insert(:transmission, state: "performing"),
         insert(:transmission, state: "transmitted"),
         insert(:transmission, state: "partial"),
@@ -42,7 +42,7 @@ defmodule Adam.Communication.TransmissionTest do
 
       scheduled = insert(:transmission, scheduled_at: scheduled_at)
 
-      {:ok, transmission: insert(:transmission), scheduled: scheduled, unscheduled: unscheduled}
+      {:ok, transmission: insert(:transmission), scheduled: scheduled, transmissions: transmissions}
     end
 
     test "should transition to 'performing' when receiving a 'scheduled' transmission", %{
@@ -55,19 +55,19 @@ defmodule Adam.Communication.TransmissionTest do
     end
 
     test "should not transition to 'performing' when receiving a 'scheduled' transmission when the scheduling time has not arrived",
-         %{scheduled: scheduled} do
-      assert {:error, reason} = Transmission.to_perform(scheduled)
+         %{scheduled: transmission} do
+      assert {:error, reason, transmission} = Transmission.to_perform(transmission)
 
-      scheduled_at = NaiveDateTime.to_string(scheduled.scheduled_at)
+      scheduled_at = NaiveDateTime.to_string(transmission.scheduled_at)
 
-      assert reason == "Cannot perform because it is scheduled to #{scheduled_at}"
+      assert reason == "Cannot perform because it is scheduled to #{scheduled_at}."
     end
 
     test "should not transition to 'performing' when receiving a unscheduled transmission", %{
-      unscheduled: unscheduled
+      transmissions: transmissions
     } do
-      Enum.each(unscheduled, fn transmission ->
-        assert {:error, "Transition to this state isn't declared."} =
+      Enum.each(transmissions, fn transmission ->
+        assert {:error, "Transition to this state isn't declared.", transmission} =
                  Transmission.to_perform(transmission)
       end)
     end
@@ -113,7 +113,7 @@ defmodule Adam.Communication.TransmissionTest do
            transmissions: transmissions
          } do
       Enum.each(transmissions, fn transmission ->
-        assert {:error, "Transition to this state isn't declared."} =
+        assert {:error, "Transition to this state isn't declared.", transmission} =
                  Transmission.to_cancel(transmission)
       end)
     end
@@ -150,7 +150,7 @@ defmodule Adam.Communication.TransmissionTest do
            transmissions: transmissions
          } do
       Enum.each(transmissions, fn transmission ->
-        assert {:error, "Transition to this state isn't declared."} =
+        assert {:error, "Transition to this state isn't declared.", transmission} =
                  Transmission.to_transmit(transmission)
       end)
     end
@@ -196,7 +196,7 @@ defmodule Adam.Communication.TransmissionTest do
            transmissions: transmissions
          } do
       Enum.each(transmissions, fn transmission ->
-        assert {:error, "Transition to this state isn't declared."} =
+        assert {:error, "Transition to this state isn't declared.", transmission} =
                  Transmission.to_partial(transmission)
       end)
     end
@@ -255,7 +255,7 @@ defmodule Adam.Communication.TransmissionTest do
            transmissions: transmissions
          } do
       Enum.each(transmissions, fn transmission ->
-        assert {:error, "Transition to this state isn't declared."} =
+        assert {:error, "Transition to this state isn't declared.", transmission} =
                  Transmission.to_complete(transmission)
       end)
     end
@@ -292,7 +292,7 @@ defmodule Adam.Communication.TransmissionTest do
            transmissions: transmissions
          } do
       Enum.each(transmissions, fn transmission ->
-        assert {:error, "Transition to this state isn't declared."} =
+        assert {:error, "Transition to this state isn't declared.", transmission} =
                  Transmission.to_incomplete(transmission)
       end)
     end
@@ -329,7 +329,7 @@ defmodule Adam.Communication.TransmissionTest do
     test "should not transition to 'failure' when receiving a `failure` transmission", %{
       failure: transmission
     } do
-      assert {:error, "Transition to this state isn't declared."} =
+      assert {:error, "Transition to this state isn't declared.", transmission} =
                Transmission.to_incomplete(transmission)
     end
   end
