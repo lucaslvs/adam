@@ -10,4 +10,9 @@ defmodule Adam.Factory do
       scheduled_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
     }
   end
+
+  def transmission_state_factory(attrs) do
+    %{transmission: %Transmission{} = transmission} = attrs
+    Ecto.build_assoc(transmission, :states, attrs)
+  end
 end

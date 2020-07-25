@@ -21,40 +21,44 @@ defmodule Adam.Communication.Transmission.Machinery do
 
   require Logger
 
-  import Adam.Communication, only: [change_transmission: 2]
-  import Adam.Information, only: [change_transmission_state: 2]
-
+  alias Adam.Communication
   alias Adam.Communication.Transmission
-  alias Ecto.Multi
+  alias Adam.Information
 
-  def before_transition(transmission, _next_state) do
-    Transmission.load_states(transmission)
+  def before_transition(%Transmission{id: id}, _next_state) do
+    Communication.get_transmission!(id)
   end
 
-  def after_transition(transmission, _next_state) do
-    Transmission.load_states(transmission)
+  def after_transition(%Transmission{id: id}, _next_state) do
+    id
+    |> Communication.get_transmission!()
+    |> Information.load_states()
   end
 
   def persist(transmission, next_state) do
     {:ok, %{transmission: transmission}} =
-      Multi.new()
-      |> Multi.update(:transmission, change_transmission(transmission, %{state: next_state}))
-      |> Multi.insert(:state, &add_transmission_state/1)
-      |> Adam.Repo.transaction()
+      Information.create_transmission_state(transmission, next_state)
 
     transmission
+  end
+
+  def guard_transition(transmission, "performing") do
+    if scheduled_time_is_now?(transmission) do
+      scheduled_at = NaiveDateTime.to_string(transmission.scheduled_at)
+
+      {:error, "Cannot perform because it is scheduled to #{scheduled_at}."}
+    else
+      transmission
+    end
   end
 
   def guard_transition(%Transmission{state: state}, next_state) when state == next_state do
     {:error, "The transmission is already #{next_state}."}
   end
 
-  def guard_transition(%Transmission{scheduled_at: scheduled_at} = transmission, "performing") do
-    if scheduled_at > NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second) do
-      scheduled_at = NaiveDateTime.to_string(scheduled_at)
-      message = "Cannot perform because it is scheduled to #{scheduled_at}."
-
-      {:error, message}
+  def guard_transition(transmission, next_state) do
+    if Information.transmission_already_had_in?(transmission, next_state) do
+      {:error, "The transmission already had in #{next_state}."}
     else
       transmission
     end
@@ -69,9 +73,7 @@ defmodule Adam.Communication.Transmission.Machinery do
     transmission
   end
 
-  defp add_transmission_state(%{transmission: transmission}) do
-    transmission
-    |> Ecto.build_assoc(:states)
-    |> change_transmission_state(%{value: transmission.state})
+  defp scheduled_time_is_now?(%Transmission{scheduled_at: scheduled_at}) do
+    scheduled_at > NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
   end
 end

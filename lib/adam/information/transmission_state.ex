@@ -30,6 +30,5 @@ defmodule Adam.Information.TransmissionState do
     |> cast(attrs, [:value])
     |> validate_required([:value])
     |> validate_inclusion(:value, @states)
-    |> apply_action!(:insert)
   end
 end

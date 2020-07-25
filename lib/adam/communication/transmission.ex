@@ -31,11 +31,6 @@ defmodule Adam.Communication.Transmission do
     |> cast_assoc(:states, with: &TransmissionState.changeset/2, required: true)
   end
 
-  @doc false
-  def load_states(%__MODULE__{} = transmission) do
-    Adam.Repo.preload(transmission, :states)
-  end
-
   def to_perform(transmission) do
     transition_to(transmission, "performing")
   end

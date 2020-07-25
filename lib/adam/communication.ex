@@ -9,7 +9,7 @@ defmodule Adam.Communication do
   alias Adam.Communication.Transmission
 
   @doc """
-  Returns the list of transmissions.
+  List all `Transmission`.
 
   ## Examples
 
@@ -17,39 +17,31 @@ defmodule Adam.Communication do
       [%Transmission{}, ...]
 
   """
-  def list_transmissions do
-    Transmission
-    |> Repo.all()
-    |> Enum.map(&Transmission.load_states/1)
-  end
+  def list_transmissions, do: Repo.all(Transmission)
 
   @doc """
-  Gets a single transmission.
+  Gets a single `Transmission` by the given `id`.
 
-  Raises `Ecto.NoResultsError` if the Transmission does not exist.
+  Raises `Ecto.NoResultsError` if the `Transmission` does not exist.
 
   ## Examples
 
       iex> get_transmission!(123)
-      %Transmission{}
+      %Transmission{id: 123}
 
       iex> get_transmission!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_transmission!(id) do
-    Transmission
-    |> Repo.get!(id)
-    |> Transmission.load_states()
-  end
+  def get_transmission!(id), do: Repo.get!(Transmission, id)
 
   @doc """
-  Creates a transmission.
+  Creates a `Transmission` by the given attributes.
 
   ## Examples
 
-      iex> create_transmission(%{field: value})
-      {:ok, %Transmission{}}
+      iex> create_transmission(%{label: "registration_confirmation"})
+      {:ok, %Transmission{label: "registration_confirmation"}}
 
       iex> create_transmission(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
@@ -62,12 +54,12 @@ defmodule Adam.Communication do
   end
 
   @doc """
-  Updates a transmission.
+  Updates a `Transmission` by the given attributes.
 
   ## Examples
 
-      iex> update_transmission(transmission, %{field: new_value})
-      {:ok, %Transmission{}}
+      iex> update_transmission(transmission, %{label: "new_value"})
+      {:ok, %Transmission{label: "new_value"}}
 
       iex> update_transmission(transmission, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
@@ -77,22 +69,6 @@ defmodule Adam.Communication do
     transmission
     |> Transmission.changeset(attrs)
     |> Repo.update()
-  end
-
-  @doc """
-  Deletes a transmission.
-
-  ## Examples
-
-      iex> delete_transmission(transmission)
-      {:ok, %Transmission{}}
-
-      iex> delete_transmission(transmission)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_transmission(%Transmission{} = transmission) do
-    Repo.delete(transmission)
   end
 
   @doc """
