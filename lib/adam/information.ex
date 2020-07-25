@@ -3,6 +3,7 @@ defmodule Adam.Information do
   The Information context.
   """
 
+  import Adam.Factory
   import Ecto.Query, warn: false
 
   alias Adam.Repo
@@ -83,8 +84,8 @@ defmodule Adam.Information do
   end
 
   defp build_transmission_state(%{transmission: transmission}) do
-    transmission
-    |> Ecto.build_assoc(:states)
+    :transaction_state
+    |> build(transmission: transmission)
     |> TransmissionState.changeset(%{value: transmission.state})
   end
 end
