@@ -81,9 +81,10 @@ defmodule Adam.Information do
     if Ecto.assoc_loaded?(states) do
       Enum.any?(states, &(&1.transmission_id == id and &1.value == state))
     else
-      TransmissionState
-      |> where([state], state.transmission_id == ^id)
-      |> where([state], state.value == ^state)
+      Map.new()
+      |> Map.put("transmission_id", id)
+      |> Map.put("value", state)
+      |> TransmissionState.filter()
       |> Repo.exists?()
     end
   end
