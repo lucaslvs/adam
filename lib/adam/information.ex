@@ -41,10 +41,14 @@ defmodule Adam.Information do
       [%TransmissionState{transmission_id: 1}, ...]
 
   """
-  def list_transmission_states(%Transmission{} = transmission) do
-    transmission
-    |> Ecto.assoc(:states)
-    |> Repo.all()
+  def list_transmission_states(%Transmission{states: states} = transmission) do
+    if Ecto.assoc_loaded?(states) do
+      states
+    else
+      transmission
+      |> Ecto.assoc(:states)
+      |> Repo.all()
+    end
   end
 
   @doc """
@@ -72,11 +76,16 @@ defmodule Adam.Information do
       iex> transmission_already_had_in?(transmission, "performing")
       false
   """
-  def transmission_already_had_in?(%Transmission{id: id}, state) when is_binary(state) do
-    TransmissionState
-    |> where([state], state.transmission_id == ^id)
-    |> where([state], state.value == ^state)
-    |> Repo.exists?()
+  def transmission_already_had_in?(%Transmission{id: id, states: states}, state)
+      when is_binary(state) do
+    if Ecto.assoc_loaded?(states) do
+      Enum.any?(states, &(&1.transmission_id == id and &1.value == state))
+    else
+      TransmissionState
+      |> where([state], state.transmission_id == ^id)
+      |> where([state], state.value == ^state)
+      |> Repo.exists?()
+    end
   end
 
   defp transmission_changeset(transmission, next_state) do
