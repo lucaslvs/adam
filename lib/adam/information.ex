@@ -71,11 +71,10 @@ defmodule Adam.Information do
       iex> transmission_already_had_in?(transmission, "performing")
       false
   """
-  def transmission_already_had_in?(%Transmission{id: id}, next_state)
-      when is_binary(next_state) do
+  def transmission_already_had_in?(%Transmission{id: id}, state) when is_binary(state) do
     TransmissionState
     |> where([state], state.transmission_id == ^id)
-    |> where([state], state.value == ^next_state)
+    |> where([state], state.value == ^state)
     |> Repo.exists?()
   end
 
