@@ -3,8 +3,6 @@ defmodule Adam.Communication do
   The Communication context.
   """
 
-  import Ecto.Query, warn: false
-
   alias Adam.Repo
   alias Adam.Communication.Transmission
 
