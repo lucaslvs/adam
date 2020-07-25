@@ -31,4 +31,9 @@ defmodule Adam.Information.TransmissionState do
     |> validate_required([:value])
     |> validate_inclusion(:value, @states)
   end
+
+  @doc """
+  TODO
+  """
+  def filter(attrs), do: __MODULE__.Query.filter(attrs)
 end
