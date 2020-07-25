@@ -46,34 +46,16 @@ defmodule Adam.Information do
     |> Repo.all()
   end
 
-  def create_transmission_state(%Transmission{} = transmission, state) do
-    transmission_changeset = Communication.change_transmission(transmission, %{state: state})
-    transmission_state_association = &build_transmission_state(Map.get(&1, :transmission), state)
-
-    Multi.new()
-    |> Multi.update(:transmission, transmission_changeset)
-    |> Multi.insert(:state, transmission_state_association)
-    |> Repo.transaction()
-  end
-
   @doc """
-  Returns a `Ecto.Changeset` for tracking a new `TransmissionState` with the given `Transmission` and `value`.
+  Creates a new `TransmissionState` for the given `Transmission`.
 
-  ## Examples
-      iex> transmission = Adam.Communication.get_transmission!(1)
-      %Adam.Communication.Transmission{id: 1}
-
-      iex> build_transmission_state(transmission, "performing")
-      %Ecto.Changeset{
-        data: %TransmissionState{transmission_id: 1},
-        changes: %{value: "performing"}
-      }
-
+  TODO insert examples
   """
-  def build_transmission_state(%Transmission{} = transmission, state) do
-    transmission
-    |> Ecto.build_assoc(:states)
-    |> TransmissionState.changeset(%{value: state})
+  def create_transmission_state(%Transmission{} = transmission, state) when is_binary(state) do
+    Multi.new()
+    |> Multi.update(:transmission, transmission_changeset(transmission, state))
+    |> Multi.insert(:state, &build_transmission_state/1)
+    |> Repo.transaction()
   end
 
   @doc """
@@ -89,10 +71,20 @@ defmodule Adam.Information do
       iex> transmission_already_had_in?(transmission, "performing")
       false
   """
-  def transmission_already_had_in?(%Transmission{id: id}, state) when is_binary(state) do
+  def transmission_already_had_in?(%Transmission{id: id}, next_state) when is_binary(next_state) do
     TransmissionState
     |> where([state], state.transmission_id == ^id)
-    |> where([state], state.value == ^state)
+    |> where([state], state.value == ^next_state)
     |> Repo.exists?()
+  end
+
+  defp transmission_changeset(transmission, next_state) do
+    Communication.change_transmission(transmission, %{state: next_state})
+  end
+
+  defp build_transmission_state(%{transmission: transmission}) do
+    transmission
+    |> Ecto.build_assoc(:states)
+    |> TransmissionState.changeset(%{value: transmission.state})
   end
 end

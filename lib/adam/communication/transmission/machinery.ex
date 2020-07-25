@@ -25,16 +25,19 @@ defmodule Adam.Communication.Transmission.Machinery do
   alias Adam.Communication.Transmission
   alias Adam.Information
 
+  @doc false
   def before_transition(%Transmission{id: id}, _next_state) do
     Communication.get_transmission!(id)
   end
 
+  @doc false
   def after_transition(%Transmission{id: id}, _next_state) do
     id
     |> Communication.get_transmission!()
     |> Information.load_states()
   end
 
+  @doc false
   def persist(transmission, next_state) do
     {:ok, %{transmission: transmission}} =
       Information.create_transmission_state(transmission, next_state)
@@ -42,6 +45,7 @@ defmodule Adam.Communication.Transmission.Machinery do
     transmission
   end
 
+  @doc false
   def guard_transition(transmission, "performing") do
     if scheduled_time_is_now?(transmission) do
       scheduled_at = NaiveDateTime.to_string(transmission.scheduled_at)
@@ -52,10 +56,12 @@ defmodule Adam.Communication.Transmission.Machinery do
     end
   end
 
+  @doc false
   def guard_transition(%Transmission{state: state}, next_state) when state == next_state do
     {:error, "The transmission is already #{next_state}."}
   end
 
+  @doc false
   def guard_transition(transmission, next_state) do
     if Information.transmission_already_had_in?(transmission, next_state) do
       {:error, "The transmission already had in #{next_state}."}
@@ -64,6 +70,7 @@ defmodule Adam.Communication.Transmission.Machinery do
     end
   end
 
+  @doc false
   def log_transition(%Transmission{id: id} = transmission, next_state) do
     from = "transmission_id: #{id}"
     to = "to: #{next_state}"

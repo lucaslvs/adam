@@ -44,7 +44,8 @@ defmodule Adam.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:machinery, "~> 1.0.0"},
-      {:ex_machina, "~> 2.4"}
+      {:ex_machina, "~> 2.4"},
+      {:scrivener_ecto, "~> 2.0"}
     ]
   end
 

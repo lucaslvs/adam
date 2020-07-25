@@ -20,6 +20,22 @@ defmodule Adam.Communication do
   def list_transmissions, do: Repo.all(Transmission)
 
   @doc """
+  Returns a `Scriviner.Page` with the given attributes.
+
+  TODO insert examples
+
+  ## Examples
+
+      iex> filter_transmissions(attrs)
+      [%Transmission{}, ...]
+  """
+  def filter_transmissions(attrs \\ %{}) do
+    attrs
+    |> Transmission.filter()
+    |> Repo.paginate(attrs)
+  end
+
+  @doc """
   Gets a single `Transmission` by the given `id`.
 
   Raises `Ecto.NoResultsError` if the `Transmission` does not exist.
@@ -34,6 +50,25 @@ defmodule Adam.Communication do
 
   """
   def get_transmission!(id), do: Repo.get!(Transmission, id)
+
+  @doc """
+  Gets a single `Transmission` by the given `id`.
+
+  ## Examples
+
+      iex> get_transmission(123)
+      {:ok, %Transmission{id: 123}}
+
+      iex> get_transmission(456)
+      {:error, :not_found}
+
+  """
+  def get_transmission(id) do
+    {:ok, get_transmission!(id)}
+  rescue
+    Ecto.NoResultsError ->
+      {:error, :not_found}
+  end
 
   @doc """
   Creates a `Transmission` by the given attributes.
@@ -67,7 +102,7 @@ defmodule Adam.Communication do
   """
   def update_transmission(%Transmission{} = transmission, attrs) do
     transmission
-    |> Transmission.changeset(attrs)
+    |> change_transmission(attrs)
     |> Repo.update()
   end
 
