@@ -3,6 +3,7 @@ defmodule Adam.Communication.Transmission do
 
   import Ecto.Changeset
 
+  alias Adam.Communication.Message
   alias Adam.Information.TransmissionState
 
   schema "transmissions" do
@@ -11,6 +12,7 @@ defmodule Adam.Communication.Transmission do
     field :state, :string, default: "scheduled"
 
     has_many :states, TransmissionState
+    has_many :messages, Message
 
     timestamps()
   end
@@ -21,6 +23,7 @@ defmodule Adam.Communication.Transmission do
     |> cast(attrs, [:label, :state, :scheduled_at])
     |> validate_required([:label])
     |> maybe_schedule_for_now()
+    |> cast_assoc(:messages, with: &Message.create_changeset/2, required: true)
   end
 
   @doc false
