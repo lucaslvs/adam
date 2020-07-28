@@ -25,8 +25,10 @@ defmodule Adam.Communication.Transmission do
 
   @doc false
   def create_changeset(transmission, attrs) do
+    attrs = Map.take(attrs, [:label, :scheduled_at])
+
     transmission
-    |> changeset(Map.take(attrs, [:label, :scheduled_at]))
+    |> changeset(attrs)
     |> add_scheduled_state()
     |> cast_assoc(:states, with: &TransmissionState.changeset/2, required: true)
   end
@@ -82,7 +84,7 @@ defmodule Adam.Communication.Transmission do
   TODO
   """
   def to_failure(transmission) do
-    transition_to(transmission, "failure")
+    transition_to(transmission, "failed")
   end
 
   @doc """
@@ -123,7 +125,7 @@ defmodule Adam.Communication.Transmission do
   @doc """
   TODO
   """
-  def is_failed?(transmission), do: with_state?(transmission, "failure")
+  def is_failed?(transmission), do: with_state?(transmission, "failed")
 
   defp maybe_schedule_for_now(changeset) do
     case changeset do

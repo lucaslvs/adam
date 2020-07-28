@@ -32,7 +32,7 @@ defmodule Adam.Communication.TransmissionTest do
         insert(:transmission, state: "complete"),
         insert(:transmission, state: "incomplete"),
         insert(:transmission, state: "canceled"),
-        insert(:transmission, state: "failure")
+        insert(:transmission, state: "failed")
       ]
 
       scheduled_at =
@@ -82,7 +82,7 @@ defmodule Adam.Communication.TransmissionTest do
         insert(:transmission, state: "complete"),
         insert(:transmission, state: "incomplete"),
         insert(:transmission, state: "canceled"),
-        insert(:transmission, state: "failure")
+        insert(:transmission, state: "failed")
       ]
 
       scheduled = insert(:transmission)
@@ -129,7 +129,7 @@ defmodule Adam.Communication.TransmissionTest do
         insert(:transmission, state: "complete"),
         insert(:transmission, state: "incomplete"),
         insert(:transmission, state: "canceled"),
-        insert(:transmission, state: "failure")
+        insert(:transmission, state: "failed")
       ]
 
       performing = insert(:transmission, state: "performing")
@@ -165,7 +165,7 @@ defmodule Adam.Communication.TransmissionTest do
         insert(:transmission, state: "partial"),
         insert(:transmission, state: "complete"),
         insert(:transmission, state: "canceled"),
-        insert(:transmission, state: "failure")
+        insert(:transmission, state: "failed")
       ]
 
       transmitted = insert(:transmission, state: "transmitted")
@@ -210,7 +210,7 @@ defmodule Adam.Communication.TransmissionTest do
         insert(:transmission, state: "performing"),
         insert(:transmission, state: "complete"),
         insert(:transmission, state: "canceled"),
-        insert(:transmission, state: "failure")
+        insert(:transmission, state: "failed")
       ]
 
       transmitted = insert(:transmission, state: "transmitted")
@@ -271,7 +271,7 @@ defmodule Adam.Communication.TransmissionTest do
         insert(:transmission, state: "complete"),
         insert(:transmission, state: "incomplete"),
         insert(:transmission, state: "canceled"),
-        insert(:transmission, state: "failure")
+        insert(:transmission, state: "failed")
       ]
 
       transmitted = insert(:transmission, state: "transmitted")
@@ -311,23 +311,23 @@ defmodule Adam.Communication.TransmissionTest do
         insert(:transmission, state: "canceled")
       ]
 
-      failure = insert(:transmission, state: "failure")
+      failure = insert(:transmission, state: "failed")
 
       {:ok, failure: failure, transmissions: transmissions}
     end
 
-    test "should transition to 'failure' when receiving a transmission that is not `failure`", %{
+    test "should transition to 'failed' when receiving a transmission that is not `failure`", %{
       transmissions: transmissions
     } do
       Enum.each(transmissions, fn transmission ->
         assert {:ok, %Transmission{} = received} = Transmission.to_failure(transmission)
         assert received.id == transmission.id
         assert received.scheduled_at == transmission.scheduled_at
-        assert received.state == "failure"
+        assert received.state == "failed"
       end)
     end
 
-    test "should not transition to 'failure' when receiving a `failure` transmission", %{
+    test "should not transition to 'failed' when receiving a `failure` transmission", %{
       failure: transmission
     } do
       assert {:error, "Transition to this state isn't declared.", transmission} =

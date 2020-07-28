@@ -26,6 +26,14 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Configures Email's checker
+config :email_checker,
+  default_dns: :system,
+  also_dns: [],
+  validations: [EmailChecker.Check.Format, EmailChecker.Check.MX],
+  smtp_retries: 1,
+  timeout_milliseconds: 6000
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

@@ -8,7 +8,7 @@ defmodule Adam.Communication.Transmission.Machinery do
       "complete",
       "incomplete",
       "canceled",
-      "failure"
+      "failed"
     ],
     transitions: %{
       "scheduled" => ["performing", "canceled"],
@@ -16,7 +16,7 @@ defmodule Adam.Communication.Transmission.Machinery do
       "transmitted" => ["partial", "complete", "incomplete"],
       "partial" => "complete",
       "incomplete" => ["partial", "complete"],
-      "*" => "failure"
+      "*" => "failed"
     }
 
   require Logger

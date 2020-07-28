@@ -13,7 +13,7 @@ defmodule Adam.Information.TransmissionState do
     "complete",
     "incomplete",
     "canceled",
-    "failure"
+    "failed"
   ]
 
   schema "transmission_states" do
