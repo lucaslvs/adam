@@ -9,7 +9,9 @@ defmodule AdamWeb.Router do
     pipe_through :api
 
     scope "/v1", V1, as: :v1 do
-      resources "/transmissions", TransmissionController, except: [:new, :edit]
+      resources "/transmissions", TransmissionController, except: [:new, :edit] do
+        resources "/messages", MessageController, only: [:index, :show]
+      end
     end
   end
 
