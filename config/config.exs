@@ -27,7 +27,7 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 # Use Casex to encode with Camel Case
-config :phoenix, format_encoders, json: Casex.CamelCaseEncoder
+config :phoenix, :format_encoders, json: Casex.CamelCaseEncoder
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
