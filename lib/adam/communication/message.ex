@@ -29,15 +29,6 @@ defmodule Adam.Communication.Message do
     |> validate_provider()
   end
 
-  @doc false
-  def create_changeset(message, attrs) do
-    attrs = Map.take(attrs, @required_fields)
-
-    message
-    |> changeset(attrs)
-    |> add_pending_state()
-  end
-
   defp validate_provider(changeset) do
     case changeset do
       %Ecto.Changeset{changes: %{type: "email", provider: "sendgrid"}} ->
@@ -52,6 +43,15 @@ defmodule Adam.Communication.Message do
       changeset ->
         changeset
     end
+  end
+
+  @doc false
+  def create_changeset(message, attrs) do
+    attrs = Map.take(attrs, @required_fields)
+
+    message
+    |> changeset(attrs)
+    |> add_pending_state()
   end
 
   defp add_pending_state(changeset) do

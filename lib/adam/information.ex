@@ -13,24 +13,6 @@ defmodule Adam.Information do
   alias Ecto.Multi
 
   @doc """
-  Load all `TransmissionState` of the given `Transmission`.
-
-  ## Examples
-      iex> transmission = Adam.Communication.get_transmission!(1)
-      %Transmission{id: 1}
-
-      iex> load_states(transmission)
-      %Transmission{
-        id: 1,
-        states: [%TransmissionState{transmission_id: 1}, ...]
-      }
-
-  """
-  def load_states(%Transmission{} = transmission) do
-    Repo.preload(transmission, :states)
-  end
-
-  @doc """
   List all `TransmissionState` by the given `Transmission`.
 
   ## Examples
@@ -63,6 +45,16 @@ defmodule Adam.Information do
     |> Repo.transaction()
   end
 
+  defp transmission_changeset(transmission, next_state) do
+    Communication.change_transmission(transmission, %{state: next_state})
+  end
+
+  defp build_transmission_state(%{transmission: transmission}) do
+    :transaction_state
+    |> build(transmission: transmission)
+    |> TransmissionState.changeset(%{value: transmission.state})
+  end
+
   @doc """
   Check if the given `Transmission` already had the given `state`.
 
@@ -89,13 +81,19 @@ defmodule Adam.Information do
     end
   end
 
-  defp transmission_changeset(transmission, next_state) do
-    Communication.change_transmission(transmission, %{state: next_state})
-  end
+  @doc """
+  Load all `TransmissionState` of the given `Transmission`.
 
-  defp build_transmission_state(%{transmission: transmission}) do
-    :transaction_state
-    |> build(transmission: transmission)
-    |> TransmissionState.changeset(%{value: transmission.state})
-  end
+  ## Examples
+      iex> transmission = Adam.Communication.get_transmission!(1)
+      %Transmission{id: 1}
+
+      iex> load_states(transmission)
+      %Transmission{
+        id: 1,
+        states: [%TransmissionState{transmission_id: 1}, ...]
+      }
+
+  """
+  def load_states(%Transmission{} = transmission), do: Repo.preload(transmission, :states)
 end

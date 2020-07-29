@@ -46,9 +46,9 @@ defmodule Adam.Communication.Transmission.Machinery do
   end
 
   @doc false
-  def guard_transition(transmission, "performing") do
-    if scheduled_time_is_now?(transmission) do
-      scheduled_at = NaiveDateTime.to_string(transmission.scheduled_at)
+  def guard_transition(%Transmission{scheduled_at: scheduled_at} = transmission, "performing") do
+    if scheduled_at > NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second) do
+      scheduled_at = NaiveDateTime.to_string(scheduled_at)
 
       {:error, "Cannot perform because it is scheduled to #{scheduled_at}."}
     else
@@ -78,9 +78,5 @@ defmodule Adam.Communication.Transmission.Machinery do
     Logger.info("[#{__MODULE__}] Performing state transition of #{from} #{to}")
 
     transmission
-  end
-
-  defp scheduled_time_is_now?(%Transmission{scheduled_at: scheduled_at}) do
-    scheduled_at > NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
   end
 end
