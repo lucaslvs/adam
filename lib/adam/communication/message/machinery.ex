@@ -23,7 +23,18 @@ defmodule Adam.Communication.Message.Machinery do
 
   require Logger
 
+  alias Adam.Communication
   alias Adam.Communication.Message
+
+  @doc false
+  def before_transition(%Message{id: id}, _next_state) do
+    Communication.get_message!(id)
+  end
+
+  @doc false
+  def after_transition(%Message{id: id},  _next_state) do
+    Communication.get_message!(id)
+  end
 
   @doc false
   def log_transition(%Message{id: id} = message, next_state) do
