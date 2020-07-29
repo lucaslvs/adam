@@ -23,6 +23,7 @@ defmodule AdamWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import AdamWeb.ConnCase
+      import Xcribe.Document
 
       alias AdamWeb.Router.Helpers, as: Routes
 

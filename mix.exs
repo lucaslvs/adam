@@ -45,7 +45,9 @@ defmodule Adam.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:machinery, "~> 1.0.0"},
       {:ex_machina, "~> 2.4"},
-      {:scrivener_ecto, "~> 2.0"}
+      {:scrivener_ecto, "~> 2.0"},
+      {:casex, "~> 0.4.0"},
+      {:xcribe, "~> 0.7.3"}
     ]
   end
 

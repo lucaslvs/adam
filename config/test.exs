@@ -20,3 +20,11 @@ config :adam, AdamWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Configures Xcribe's implementation
+config :xcribe,
+  information_source: AdamWeb.Information,
+  format: :api_blueprint,
+  output: "adam_doc.apib",
+  env_var: "DOC_API",
+  json_library: Jason
