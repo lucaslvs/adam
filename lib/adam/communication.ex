@@ -4,7 +4,7 @@ defmodule Adam.Communication do
   """
 
   alias Adam.Repo
-  alias Adam.Communication.{Transmission, Message}
+  alias __MODULE__.{Transmission, Message}
 
   @doc """
   List all `Transmission`s.
@@ -133,6 +133,21 @@ defmodule Adam.Communication do
   """
   def load_transmission(%Message{} = message), do: Repo.preload(message, :transmission)
 
+  # @doc """
+  # TODO
+  # """
+  # def send_transmission_messages(%Transmission{} = transmission) do
+  #   if Transmission.is_performing?(transmission) do
+  #     transmission
+  #     |> load_messages()
+  #     |> Enum.each(&Message.to_send/1)
+
+  #     PubSub.transmission_sending(transmission)
+  #   else
+  #     {:error, "Cannot send transmission messages because transmission are not performing"}
+  #   end
+  # end
+
   @doc """
   Returns the list of `Message`.
 
@@ -227,4 +242,19 @@ defmodule Adam.Communication do
   def change_message(%Message{} = message, attrs \\ %{}) do
     Message.changeset(message, attrs)
   end
+
+  @doc """
+  Load `Message` of the given `Transmission`.
+
+  ## Examples
+      iex> transmission = get_transmission!(1)
+      %Transmission{id: 1}
+
+      iex> load_messages(transmisson)
+      %Transmisson{
+        id: 1,
+        messages: [Message{transmission_id: 1}]
+      }
+  """
+  def load_messages(%Transmission{} = transmission), do: Repo.preload(transmission, :messages)
 end

@@ -31,6 +31,10 @@ defmodule Adam.Communication.Transmission.Machinery do
   end
 
   @doc false
+  def after_transition(transmission, "performing") do
+    transmission
+  end
+
   def after_transition(%Transmission{id: id}, _next_state) do
     id
     |> Communication.get_transmission!()
