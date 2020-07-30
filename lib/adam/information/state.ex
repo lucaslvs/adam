@@ -3,33 +3,70 @@ defmodule Adam.Information.State do
 
   import Ecto.Changeset
 
-  alias Adam.Communication.Transmission
+  alias Adam.Communication.{Transmission, Message}
 
-  @states [
+  @shared_states ["canceled", "failed"]
+
+  @transmission_states [
     "scheduled",
     "performing",
     "transmitted",
     "partial",
     "complete",
-    "incomplete",
-    "canceled",
-    "failed"
+    "incomplete"
+  ]
+
+  @message_states [
+    "pending",
+    "sending",
+    "sent",
+    "delivered",
+    "undelivered",
+    "received",
+    "unreceived",
+    "interacted"
   ]
 
   schema "states" do
     field :value, :string, null: false
 
     belongs_to :transmission, Transmission
+    belongs_to :message, Message
 
     timestamps(updated_at: false)
   end
 
   @doc false
-  def changeset(state, attrs) do
+  def transmission_changeset(state, attrs) do
     state
-    |> cast(attrs, [:value])
+    |> changeset(attrs)
+    |> validate_inclusion(:value, @shared_states ++ @transmission_states)
+    |> assoc_constraint(:transmission)
+    |> must_belong_to_transmission_or_message(:transmission)
+  end
+
+  @doc false
+  def message_changeset(state, attrs) do
+    state
+    |> changeset(attrs)
+    |> validate_inclusion(:value, @shared_states ++ @message_states)
+    |> assoc_constraint(:message)
+    |> must_belong_to_transmission_or_message(:message)
+  end
+
+  defp changeset(state, attrs) do
+    state
+    |> cast(attrs, [:value, :transmission_id, :message_id])
     |> validate_required([:value])
-    |> validate_inclusion(:value, @states)
+  end
+
+  defp must_belong_to_transmission_or_message(changeset, field) when field in [:transmission, :message] do
+    check_constraint(
+      changeset,
+      field,
+      name: :must_belong_to_transmission_or_message,
+      message: "Must belong to a transmission or a message"
+    )
   end
 
   @doc """

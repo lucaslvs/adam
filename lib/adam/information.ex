@@ -8,7 +8,7 @@ defmodule Adam.Information do
 
   alias Adam.Repo
   alias Adam.Communication
-  alias Adam.Communication.Transmission
+  alias Adam.Communication.{Transmission, Message}
   alias Adam.Information.State
   alias Ecto.Multi
 
@@ -50,9 +50,9 @@ defmodule Adam.Information do
   end
 
   defp build_transmission_state(%{transmission: transmission}) do
-    :transaction_state
+    :transmission_state
     |> build(transmission: transmission)
-    |> State.changeset(%{value: transmission.state})
+    |> State.transmission_changeset(%{value: transmission.state})
   end
 
   @doc """
@@ -82,18 +82,27 @@ defmodule Adam.Information do
   end
 
   @doc """
-  Load all `State` of the given `Transmission`.
+  Load all `State`s of the given `Transmission` or `Message`.
 
   ## Examples
       iex> transmission = Adam.Communication.get_transmission!(1)
-      %Transmission{id: 1}
+      %Adam.Communication.Transmission{id: 1}
 
       iex> load_states(transmission)
-      %Transmission{
+      %Adam.Communication.Transmission{
         id: 1,
         states: [%State{transmission_id: 1}, ...]
       }
 
+      iex> message = Adam.Communication.get_message!(1)
+      %Adam.Communication.Message{id: 1}
+
+      iex> load_states(message)
+      %Adam.Communication.Message{
+        id: 1,
+        states: [%State{message_id: 1}, ...]
+      }
   """
   def load_states(%Transmission{} = transmission), do: Repo.preload(transmission, :states)
+  def load_states(%Message{} = message), do: Repo.preload(message, :states)
 end
