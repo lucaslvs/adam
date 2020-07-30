@@ -46,7 +46,7 @@ defmodule Adam.Communication.Message.Machinery do
 
   @doc false
   def guard_transition(message, "sending") do
-    %Message{transmission: %Transmission{} = transmission} =
+    %Message{transmission: %Transmission{id: id} = transmission} =
       Communication.load_transmission(message)
 
     cond do
@@ -54,11 +54,13 @@ defmodule Adam.Communication.Message.Machinery do
         message
 
       Transmission.is_scheduled?(transmission) ->
-        scheduled_at = NaiveDateTime.to_string(transmission.scheduled_at)
-        {:error, "Cannot send because transmission is scheduled to #{scheduled_at}."}
+        {:error, "Cannot send because transmission_id: #{id} is still scheduled."}
+
+      Transmission.is_canceled?(transmission) ->
+        {:error, "Cannot send because transmission_id: #{id} is canceled."}
 
       true ->
-        {:error, "Cannot send because transmission is not performing."}
+        {:error, "Cannot send because transmission_id: #{id} is not performing."}
     end
   end
 
