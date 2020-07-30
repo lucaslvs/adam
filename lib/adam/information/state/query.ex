@@ -1,11 +1,11 @@
-defmodule Adam.Information.TransmissionState.Query do
+defmodule Adam.Information.State.Query do
   import Ecto.Query, warn: false
 
-  alias Adam.Information.TransmissionState
+  alias Adam.Information.State
 
   @doc false
   def filter(attrs) do
-    TransmissionState
+    State
     |> order_by(^filter_order_by(attrs["order_by"]))
     |> where(^filter_where(attrs))
   end

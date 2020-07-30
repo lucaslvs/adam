@@ -5,5 +5,5 @@ import Ecto.Query, warn: false
 alias Adam.Communication
 alias Adam.Communication.{Transmission}
 alias Adam.Information
-alias Adam.Information.{TransmissionState}
+alias Adam.Information.{State}
 alias AdamWeb.Router.Helpers, as: Routes

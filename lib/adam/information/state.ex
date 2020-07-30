@@ -1,4 +1,4 @@
-defmodule Adam.Information.TransmissionState do
+defmodule Adam.Information.State do
   use Ecto.Schema
 
   import Ecto.Changeset
@@ -16,7 +16,7 @@ defmodule Adam.Information.TransmissionState do
     "failed"
   ]
 
-  schema "transmission_states" do
+  schema "states" do
     field :value, :string, null: false
 
     belongs_to :transmission, Transmission
@@ -25,8 +25,8 @@ defmodule Adam.Information.TransmissionState do
   end
 
   @doc false
-  def changeset(transmission_state, attrs) do
-    transmission_state
+  def changeset(state, attrs) do
+    state
     |> cast(attrs, [:value])
     |> validate_required([:value])
     |> validate_inclusion(:value, @states)

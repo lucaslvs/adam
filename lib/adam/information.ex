@@ -9,18 +9,18 @@ defmodule Adam.Information do
   alias Adam.Repo
   alias Adam.Communication
   alias Adam.Communication.Transmission
-  alias Adam.Information.TransmissionState
+  alias Adam.Information.State
   alias Ecto.Multi
 
   @doc """
-  List all `TransmissionState` by the given `Transmission`.
+  List all `State` by the given `Transmission`.
 
   ## Examples
       iex> transmission = Adam.Communication.get_transmission!(1)
       %Transmission{id: 1}
 
       iex> list_transmission_states(transmission)
-      [%TransmissionState{transmission_id: 1}, ...]
+      [%State{transmission_id: 1}, ...]
 
   """
   def list_transmission_states(%Transmission{states: states} = transmission) do
@@ -34,7 +34,7 @@ defmodule Adam.Information do
   end
 
   @doc """
-  Creates a new `TransmissionState` for the given `Transmission`.
+  Creates a new `State` for the given `Transmission`.
 
   TODO insert examples
   """
@@ -52,7 +52,7 @@ defmodule Adam.Information do
   defp build_transmission_state(%{transmission: transmission}) do
     :transaction_state
     |> build(transmission: transmission)
-    |> TransmissionState.changeset(%{value: transmission.state})
+    |> State.changeset(%{value: transmission.state})
   end
 
   @doc """
@@ -76,13 +76,13 @@ defmodule Adam.Information do
       Map.new()
       |> Map.put("transmission_id", id)
       |> Map.put("value", state)
-      |> TransmissionState.filter()
+      |> State.filter()
       |> Repo.exists?()
     end
   end
 
   @doc """
-  Load all `TransmissionState` of the given `Transmission`.
+  Load all `State` of the given `Transmission`.
 
   ## Examples
       iex> transmission = Adam.Communication.get_transmission!(1)
@@ -91,7 +91,7 @@ defmodule Adam.Information do
       iex> load_states(transmission)
       %Transmission{
         id: 1,
-        states: [%TransmissionState{transmission_id: 1}, ...]
+        states: [%State{transmission_id: 1}, ...]
       }
 
   """

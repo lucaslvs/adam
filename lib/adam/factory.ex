@@ -2,7 +2,7 @@ defmodule Adam.Factory do
   use ExMachina.Ecto, repo: Adam.Repo
 
   alias Adam.Communication.Transmission
-  alias Adam.Information.TransmissionState
+  alias Adam.Information.State
 
   @doc false
   def transmission_factory do
@@ -20,7 +20,7 @@ defmodule Adam.Factory do
         Ecto.build_assoc(transmission, :states, attrs)
 
       _ ->
-        struct!(TransmissionState, attrs)
+        struct!(State, attrs)
     end
   end
 end

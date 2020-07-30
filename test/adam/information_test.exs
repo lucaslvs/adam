@@ -4,7 +4,7 @@ defmodule Adam.InformationTest do
   alias Adam.Information
 
   describe "transmission_states" do
-    alias Adam.Information.TransmissionState
+    alias Adam.Information.State
 
     @valid_attrs %{value: "some value"}
     @update_attrs %{value: "some updated value"}
@@ -30,7 +30,7 @@ defmodule Adam.InformationTest do
     end
 
     test "create_transmission_state/1 with valid data creates a transmission_state" do
-      assert {:ok, %TransmissionState{} = transmission_state} =
+      assert {:ok, %State{} = transmission_state} =
                Information.create_transmission_state(@valid_attrs)
 
       assert transmission_state.value == "some value"
@@ -43,7 +43,7 @@ defmodule Adam.InformationTest do
     test "update_transmission_state/2 with valid data updates the transmission_state" do
       transmission_state = transmission_state_fixture()
 
-      assert {:ok, %TransmissionState{} = transmission_state} =
+      assert {:ok, %State{} = transmission_state} =
                Information.update_transmission_state(transmission_state, @update_attrs)
 
       assert transmission_state.value == "some updated value"
@@ -61,7 +61,7 @@ defmodule Adam.InformationTest do
     test "delete_transmission_state/1 deletes the transmission_state" do
       transmission_state = transmission_state_fixture()
 
-      assert {:ok, %TransmissionState{}} =
+      assert {:ok, %State{}} =
                Information.delete_transmission_state(transmission_state)
 
       assert_raise Ecto.NoResultsError, fn ->

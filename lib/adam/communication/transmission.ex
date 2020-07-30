@@ -8,7 +8,7 @@ defmodule Adam.Communication.Transmission do
   import Ecto.Changeset
 
   alias Adam.Communication.Message
-  alias Adam.Information.TransmissionState
+  alias Adam.Information.State
   alias __MODULE__.Query
 
   @typedoc "The transmission entity"
@@ -19,7 +19,7 @@ defmodule Adam.Communication.Transmission do
     field :scheduled_at, :naive_datetime, null: false
     field :state, :string, default: "scheduled"
 
-    has_many :states, TransmissionState
+    has_many :states, State
     has_many :messages, Message
 
     timestamps()
@@ -54,7 +54,7 @@ defmodule Adam.Communication.Transmission do
     transmission
     |> changeset(attrs)
     |> add_scheduled_state()
-    |> cast_assoc(:states, with: &TransmissionState.changeset/2, required: true)
+    |> cast_assoc(:states, with: &State.changeset/2, required: true)
   end
 
   defp add_scheduled_state(changeset) do
