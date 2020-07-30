@@ -11,11 +11,13 @@ defmodule AdamWeb.V1.MessageView do
   end
 
   def render("message.json", %{message: message}) do
-    %{id: message.id,
+    %{
+      id: message.id,
       state: message.state,
       type: message.type,
       provider: message.provider,
       sender: message.sender,
-      receiver: message.receiver}
+      receiver: message.receiver
+    }
   end
 end

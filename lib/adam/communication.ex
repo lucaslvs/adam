@@ -7,7 +7,7 @@ defmodule Adam.Communication do
   alias Adam.Communication.{Transmission, Message}
 
   @doc """
-  List all `Transmission`.
+  List all `Transmission`s.
 
   ## Examples
 
@@ -18,7 +18,7 @@ defmodule Adam.Communication do
   def list_transmissions, do: Repo.all(Transmission)
 
   @doc """
-  Returns a `Scriviner.Page` with a list of `Transmission` filtered by the given attributes.
+  Returns a `Scriviner.Page` with a list of `Transmission`s filtered by the given attributes.
 
   TODO insert examples
 
@@ -116,6 +116,22 @@ defmodule Adam.Communication do
   def change_transmission(%Transmission{} = transmission, attrs \\ %{}) do
     Transmission.changeset(transmission, attrs)
   end
+
+  @doc """
+  Load `Transmission` of the given `Message`.
+
+  ## Examples
+      iex> message = get_message!(1)
+      %Message{id: 1, transmission_id: 1}
+
+      iex> load_transmission(message)
+      %Message{
+        id: 1,
+        transmission_id: 1,
+        transmission: Transmission{id: 1}
+      }
+  """
+  def load_transmission(%Message{} = message), do: Repo.preload(message, :transmission)
 
   @doc """
   Returns the list of `Message`.

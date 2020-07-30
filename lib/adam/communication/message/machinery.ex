@@ -24,7 +24,7 @@ defmodule Adam.Communication.Message.Machinery do
   require Logger
 
   alias Adam.Communication
-  alias Adam.Communication.Message
+  alias Adam.Communication.{Transmission, Message}
   alias Adam.Information
 
   @doc false
@@ -33,18 +33,37 @@ defmodule Adam.Communication.Message.Machinery do
   end
 
   @doc false
-  def after_transition(%Message{id: id},  _next_state) do
-    id
-    |> Communication.get_message!()
-    |> Information.load_states()
+  def after_transition(%Message{id: id}, _next_state) do
+    Communication.get_message!(id)
   end
 
   @doc false
   def persist(message, next_state) do
-    {:ok, %{message: message}} =
-      Information.create_message_state(message, next_state)
+    {:ok, %{message: message}} = Information.create_message_state(message, next_state)
 
-      message
+    message
+  end
+
+  @doc false
+  def guard_transition(message, "sending") do
+    %Message{transmission: %Transmission{} = transmission} =
+      Communication.load_transmission(message)
+
+    cond do
+      Transmission.is_performing?(transmission) ->
+        message
+
+      Transmission.is_scheduled?(transmission) ->
+        scheduled_at = NaiveDateTime.to_string(transmission.scheduled_at)
+        {:error, "Cannot send because transmission is scheduled to #{scheduled_at}."}
+
+      true ->
+        {:error, "Cannot send because transmission is not performing."}
+    end
+  end
+
+  def guard_transition(%Message{state: state}, next_state) when state == next_state do
+    {:error, "The message is already #{next_state}."}
   end
 
   @doc false

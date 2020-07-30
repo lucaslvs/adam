@@ -13,7 +13,7 @@ defmodule Adam.Information do
   alias Ecto.Multi
 
   @doc """
-  Returns a `Scriviner.Page` with a list of `State` filtered by the given attributes.
+  Returns a `Scriviner.Page` with a list of `State`s filtered by the given attributes.
 
   TODO insert examples
 
@@ -80,7 +80,7 @@ defmodule Adam.Information do
   def load_states(%Message{} = message), do: Repo.preload(message, :states)
 
   @doc """
-  List all `State` by the given `Transmission`.
+  List all `State`s by the given `Transmission`.
 
   ## Examples
       iex> transmission = Adam.Communication.get_transmission!(1)
@@ -123,7 +123,7 @@ defmodule Adam.Information do
   end
 
   @doc """
-  List all `State` by the given `Message`.
+  List all `State`s by the given `Message`.
 
   ## Examples
       iex> message = Adam.Communication.get_message!(1)

@@ -60,7 +60,8 @@ defmodule Adam.Information.State do
     |> validate_required([:value])
   end
 
-  defp must_belong_to_transmission_or_message(changeset, field) when field in [:transmission, :message] do
+  defp must_belong_to_transmission_or_message(changeset, field)
+       when field in [:transmission, :message] do
     check_constraint(
       changeset,
       field,

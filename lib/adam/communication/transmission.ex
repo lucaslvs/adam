@@ -100,7 +100,8 @@ defmodule Adam.Communication.Transmission do
   @doc """
   TODO
   """
-  @spec to_incomplete(transmission()) :: {:ok, transmission()} | {:error, binary(), transmission()}
+  @spec to_incomplete(transmission()) ::
+          {:ok, transmission()} | {:error, binary(), transmission()}
   def to_incomplete(transmission), do: transition_to(transmission, "incomplete")
 
   @doc """

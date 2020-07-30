@@ -79,8 +79,20 @@ defmodule Adam.CommunicationTest do
   describe "messages" do
     alias Adam.Communication.Message
 
-    @valid_attrs %{provider: "some provider", receiver: "some receiver", sender: "some sender", state: "some state", type: "some type"}
-    @update_attrs %{provider: "some updated provider", receiver: "some updated receiver", sender: "some updated sender", state: "some updated state", type: "some updated type"}
+    @valid_attrs %{
+      provider: "some provider",
+      receiver: "some receiver",
+      sender: "some sender",
+      state: "some state",
+      type: "some type"
+    }
+    @update_attrs %{
+      provider: "some updated provider",
+      receiver: "some updated receiver",
+      sender: "some updated sender",
+      state: "some updated state",
+      type: "some updated type"
+    }
     @invalid_attrs %{provider: nil, receiver: nil, sender: nil, state: nil, type: nil}
 
     def message_fixture(attrs \\ %{}) do
