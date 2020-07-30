@@ -60,4 +60,56 @@ defmodule Adam.Communication.Message do
   defp add_pending_state(changeset) do
     put_change(changeset, :states, [%{value: "pending"}])
   end
+
+  def to_send(message), do: transition_to(message, "sending")
+
+  def to_sent(message), do: transition_to(message, "sent")
+
+  def to_delivered(message), do: transition_to(message, "delivered")
+
+  def to_undelivered(message), do: transition_to(message, "undelivered")
+
+  def to_received(message), do: transition_to(message, "received")
+
+  def to_unreceived(message), do: transition_to(message, "unreceived")
+
+  def to_interacted(message), do: transition_to(message, "interacted")
+
+  def to_cancel(message), do: transition_to(message, "canceled")
+
+  def to_failure(message), do: transition_to(message, "failed")
+
+  defp transition_to(%__MODULE__{} = message, next_state) when is_binary(next_state) do
+    case Machinery.transition_to(message, __MODULE__.Machinery, next_state) do
+      {:ok, %__MODULE__{} = message} ->
+        {:ok, message}
+
+      {:error, error_message} ->
+        {:error, error_message, message}
+    end
+  end
+
+  def is_pending?(message), do: with_state?(message, "pending")
+
+  def is_sending?(message), do: with_state?(message, "sending")
+
+  def is_sent?(message), do: with_state?(message, "sent")
+
+  def is_delivered?(message), do: with_state?(message, "delivered")
+
+  def is_undelivered?(message), do: with_state?(message, "undelivered")
+
+  def is_received?(message), do: with_state?(message, "received")
+
+  def is_unreceived?(message), do: with_state?(message, "unreceived")
+
+  def is_interacted?(message), do: with_state?(message, "interacted")
+
+  def is_canceled?(message), do: with_state?(message, "canceled")
+
+  def is_failed?(message), do: with_state?(message, "failed")
+
+  defp with_state?(%__MODULE__{state: current_state}, state) when is_binary(state) do
+    current_state == state
+  end
 end

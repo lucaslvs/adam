@@ -76,12 +76,6 @@ defmodule Adam.Communication.Transmission do
   @doc """
   TODO
   """
-  @spec to_cancel(transmission()) :: {:ok, transmission()} | {:error, binary(), transmission()}
-  def to_cancel(transmission), do: transition_to(transmission, "canceled")
-
-  @doc """
-  TODO
-  """
   @spec to_transmit(transmission()) :: {:ok, transmission()} | {:error, binary(), transmission()}
   def to_transmit(transmission), do: transition_to(transmission, "transmitted")
 
@@ -107,6 +101,12 @@ defmodule Adam.Communication.Transmission do
   @doc """
   TODO
   """
+  @spec to_cancel(transmission()) :: {:ok, transmission()} | {:error, binary(), transmission()}
+  def to_cancel(transmission), do: transition_to(transmission, "canceled")
+
+  @doc """
+  TODO
+  """
   @spec to_failure(transmission()) :: {:ok, transmission()} | {:error, binary(), transmission()}
   def to_failure(transmission), do: transition_to(transmission, "failed")
 
@@ -115,8 +115,8 @@ defmodule Adam.Communication.Transmission do
       {:ok, %__MODULE__{} = transmission} ->
         {:ok, transmission}
 
-      {:error, message} ->
-        {:error, message, transmission}
+      {:error, error_message} ->
+        {:error, error_message, transmission}
     end
   end
 
