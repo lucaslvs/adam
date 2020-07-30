@@ -32,7 +32,6 @@ defmodule Adam.Communication.Transmission do
     |> cast(attrs, [:label, :state, :scheduled_at])
     |> validate_required([:label])
     |> maybe_schedule_for_now()
-    |> cast_assoc(:messages, with: &Message.create_changeset/2)
   end
 
   defp maybe_schedule_for_now(changeset) do
@@ -55,6 +54,7 @@ defmodule Adam.Communication.Transmission do
     |> changeset(attrs)
     |> add_scheduled_state()
     |> cast_assoc(:states, with: &State.transmission_changeset/2, required: true)
+    |> cast_assoc(:messages, with: &Message.create_changeset/2, required: true)
   end
 
   defp add_scheduled_state(changeset) do

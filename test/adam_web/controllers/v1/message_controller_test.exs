@@ -84,18 +84,18 @@ defmodule AdamWeb.V1.MessageControllerTest do
     end
   end
 
-  describe "delete message" do
-    setup [:create_message]
+  # describe "delete message" do
+  #   setup [:create_message]
 
-    test "deletes chosen message", %{conn: conn, message: message} do
-      conn = delete(conn, Routes.v1_message_path(conn, :delete, message))
-      assert response(conn, 204)
+  #   test "deletes chosen message", %{conn: conn, message: message} do
+  #     conn = delete(conn, Routes.v1_message_path(conn, :delete, message))
+  #     assert response(conn, 204)
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.v1_message_path(conn, :show, message))
-      end
-    end
-  end
+  #     assert_error_sent 404, fn ->
+  #       get(conn, Routes.v1_message_path(conn, :show, message))
+  #     end
+  #   end
+  # end
 
   defp create_message(_) do
     message = fixture(:message)

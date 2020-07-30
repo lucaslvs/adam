@@ -4,6 +4,7 @@ defmodule Adam.Communication.Message do
   import Ecto.Changeset
 
   alias Adam.Communication.Transmission
+  alias Adam.Information.State
 
   @required_fields [:type, :provider, :sender, :receiver]
   @types ["email", "sms"]
@@ -16,6 +17,7 @@ defmodule Adam.Communication.Message do
     field :type, :string, null: false
 
     belongs_to :transmission, Transmission
+    has_many :states, State
 
     timestamps()
   end
@@ -52,6 +54,7 @@ defmodule Adam.Communication.Message do
     message
     |> changeset(attrs)
     |> add_pending_state()
+    |> cast_assoc(:states, with: &State.message_changeset/2, required: true)
   end
 
   defp add_pending_state(changeset) do

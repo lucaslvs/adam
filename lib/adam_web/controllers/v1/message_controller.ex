@@ -33,11 +33,11 @@ defmodule AdamWeb.V1.MessageController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    message = Communication.get_message!(id)
+  # def delete(conn, %{"id" => id}) do
+  #   message = Communication.get_message!(id)
 
-    with {:ok, %Message{}} <- Communication.delete_message(message) do
-      send_resp(conn, :no_content, "")
-    end
-  end
+  #   with {:ok, %Message{}} <- Communication.delete_message(message) do
+  #     send_resp(conn, :no_content, "")
+  #   end
+  # end
 end

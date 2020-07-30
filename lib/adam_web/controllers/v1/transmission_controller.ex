@@ -35,11 +35,11 @@ defmodule AdamWeb.V1.TransmissionController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    transmission = Communication.get_transmission!(id)
+  # def delete(conn, %{"id" => id}) do
+  #   transmission = Communication.get_transmission!(id)
 
-    with {:ok, %Transmission{}} <- Communication.delete_transmission(transmission) do
-      send_resp(conn, :no_content, "")
-    end
-  end
+  #   with {:ok, %Transmission{}} <- Communication.delete_transmission(transmission) do
+  #     send_resp(conn, :no_content, "")
+  #   end
+  # end
 end

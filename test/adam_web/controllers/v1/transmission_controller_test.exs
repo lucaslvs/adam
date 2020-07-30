@@ -87,18 +87,18 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
     end
   end
 
-  describe "delete transmission" do
-    setup [:create_transmission]
+  # describe "delete transmission" do
+  #   setup [:create_transmission]
 
-    test "deletes chosen transmission", %{conn: conn, transmission: transmission} do
-      conn = delete(conn, Routes.v1_transmission_path(conn, :delete, transmission))
-      assert response(conn, 204)
+  #   test "deletes chosen transmission", %{conn: conn, transmission: transmission} do
+  #     conn = delete(conn, Routes.v1_transmission_path(conn, :delete, transmission))
+  #     assert response(conn, 204)
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.v1_transmission_path(conn, :show, transmission))
-      end
-    end
-  end
+  #     assert_error_sent 404, fn ->
+  #       get(conn, Routes.v1_transmission_path(conn, :show, transmission))
+  #     end
+  #   end
+  # end
 
   defp create_transmission(_) do
     transmission = fixture(:transmission)

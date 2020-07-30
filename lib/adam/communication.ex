@@ -18,7 +18,7 @@ defmodule Adam.Communication do
   def list_transmissions, do: Repo.all(Transmission)
 
   @doc """
-  Returns a `Scriviner.Page` with the given attributes.
+  Returns a `Scriviner.Page` with a list of `Transmission` filtered by the given attributes.
 
   TODO insert examples
 
@@ -145,6 +145,25 @@ defmodule Adam.Communication do
   def get_message!(id), do: Repo.get!(Message, id)
 
   @doc """
+  Gets a single `Message` by the given `id`.
+
+  ## Examples
+
+      iex> get_message(123)
+      {:ok, %Message{id: 123}}
+
+      iex> get_message(456)
+      {:error, :not_found}
+
+  """
+  def get_message(id) do
+    {:ok, get_message!(id)}
+  rescue
+    Ecto.NoResultsError ->
+      {:error, :not_found}
+  end
+
+  @doc """
   Creates a `Message`.
 
   ## Examples
@@ -178,22 +197,6 @@ defmodule Adam.Communication do
     message
     |> Message.changeset(attrs)
     |> Repo.update()
-  end
-
-  @doc """
-  Deletes a `Message`.
-
-  ## Examples
-
-      iex> delete_message(message)
-      {:ok, %Message{}}
-
-      iex> delete_message(message)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_message(%Message{} = message) do
-    Repo.delete(message)
   end
 
   @doc """

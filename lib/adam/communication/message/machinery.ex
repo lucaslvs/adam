@@ -25,6 +25,7 @@ defmodule Adam.Communication.Message.Machinery do
 
   alias Adam.Communication
   alias Adam.Communication.Message
+  alias Adam.Information
 
   @doc false
   def before_transition(%Message{id: id}, _next_state) do
@@ -33,7 +34,17 @@ defmodule Adam.Communication.Message.Machinery do
 
   @doc false
   def after_transition(%Message{id: id},  _next_state) do
-    Communication.get_message!(id)
+    id
+    |> Communication.get_message!()
+    |> Information.load_states()
+  end
+
+  @doc false
+  def persist(message, next_state) do
+    {:ok, %{message: message}} =
+      Information.create_message_state(message, next_state)
+
+      message
   end
 
   @doc false
