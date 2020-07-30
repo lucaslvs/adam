@@ -46,21 +46,27 @@ defmodule Adam.Communication.Message.Machinery do
 
   @doc false
   def guard_transition(message, "sending") do
-    %Message{transmission: %Transmission{id: id} = transmission} =
-      Communication.load_transmission(message)
+    transmission =
+      case message do
+        %Message{transmission: %Transmission{} = transmission} ->
+          transmission
+
+        message ->
+          Communication.load_transmission(message)
+      end
 
     cond do
       Transmission.is_performing?(transmission) ->
         message
 
       Transmission.is_scheduled?(transmission) ->
-        {:error, "Cannot send because transmission_id: #{id} is still scheduled."}
+        {:error, "Cannot send because transmission_id: #{transmission.id} is still scheduled."}
 
       Transmission.is_canceled?(transmission) ->
-        {:error, "Cannot send because transmission_id: #{id} is canceled."}
+        {:error, "Cannot send because transmission_id: #{transmission.id} is canceled."}
 
       true ->
-        {:error, "Cannot send because transmission_id: #{id} is not performing."}
+        {:error, "Cannot send because transmission_id: #{transmission.id} is not performing."}
     end
   end
 
