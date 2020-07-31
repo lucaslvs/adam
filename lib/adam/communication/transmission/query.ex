@@ -34,14 +34,20 @@ defmodule Adam.Communication.Transmission.Query do
 
   defp filter_where(attrs) do
     Enum.reduce(attrs, dynamic(true), fn
+      {"state", value}, dynamic ->
+        dynamic([t], ^dynamic and t.state == ^value)
+
       {"label", value}, dynamic ->
         dynamic([t], ^dynamic and t.label == ^value)
 
+      {"inserted_at", value}, dynamic ->
+        dynamic([t], ^dynamic and t.inserted_at == ^value)
+
+      {"updated_at", value}, dynamic ->
+        dynamic([t], ^dynamic and t.updated_at == ^value)
+
       {"scheduled_at", value}, dynamic ->
         dynamic([t], ^dynamic and t.scheduled_at == ^value)
-
-      {"inserted_at", value}, dynamic ->
-        dynamic([t], ^dynamic and t.inserted_at > ^value)
 
       {_, _}, dynamic ->
         dynamic
