@@ -133,21 +133,6 @@ defmodule Adam.Communication do
   """
   def load_transmission(%Message{} = message), do: Repo.preload(message, :transmission)
 
-  # @doc """
-  # TODO
-  # """
-  # def send_transmission_messages(%Transmission{} = transmission) do
-  #   if Transmission.is_performing?(transmission) do
-  #     transmission
-  #     |> load_messages()
-  #     |> Enum.each(&Message.to_send/1)
-
-  #     PubSub.transmission_sending(transmission)
-  #   else
-  #     {:error, "Cannot send transmission messages because transmission are not performing"}
-  #   end
-  # end
-
   @doc """
   Returns the list of `Message`.
 
