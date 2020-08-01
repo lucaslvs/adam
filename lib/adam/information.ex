@@ -4,7 +4,6 @@ defmodule Adam.Information do
   """
 
   import Adam.Factory
-  import Ecto.Query, warn: false
 
   alias Adam.Repo
   alias Adam.Communication

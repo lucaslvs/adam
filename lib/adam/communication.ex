@@ -3,8 +3,10 @@ defmodule Adam.Communication do
   The Communication context.
   """
 
+  import Adam.Factory
+
   alias Adam.Repo
-  alias __MODULE__.{Transmission, Message}
+  alias __MODULE__.{Content, Transmission, Message}
 
   @doc """
   List all `Transmission`s.
@@ -311,9 +313,11 @@ defmodule Adam.Communication do
   Returns an `Ecto.Changeset` for tracking message changes.
 
   ## Examples
+      iex> message = get_message!(1)
+      %Message{id: 1}
 
       iex> change_message(message)
-      %Ecto.Changeset{data: %Message{}}
+      %Ecto.Changeset{data: %Message{id: 1}}
 
   """
   def change_message(%Message{} = message, attrs \\ %{}) do
@@ -334,4 +338,160 @@ defmodule Adam.Communication do
       }
   """
   def load_messages(%Transmission{} = transmission), do: Repo.preload(transmission, :messages)
+
+  @doc """
+  Returns the list of contents.
+
+  TODO update
+  ## Examples
+
+      iex> list_contents()
+      [%Content{}, ...]
+
+  """
+  def list_contents, do: Repo.all(Content)
+
+  @doc """
+  Gets a single content.
+
+  Raises `Ecto.NoResultsError` if the Content does not exist.
+
+  TODO update
+  ## Examples
+
+      iex> get_content!(123)
+      %Content{}
+
+      iex> get_content!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_content!(id), do: Repo.get!(Content, id)
+
+  @doc """
+  Creates a content.
+
+  TODO update
+  ## Examples
+
+      iex> create_transmission_content(%{field: value})
+      {:ok, %Content{}}
+
+      iex> create_transmission_content(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_transmission_content(%Transmission{} = transmission, attrs \\ %{}) do
+    :transmission_content
+    |> build(transmission: transmission)
+    |> Content.transmission_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Creates a content.
+
+  TODO update
+  ## Examples
+
+      iex> create_message_content(%{field: value})
+      {:ok, %Content{}}
+
+      iex> create_message_content(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_message_content(%Message{} = message, attrs \\ %{}) do
+    :message_content
+    |> build(message: message)
+    |> Content.message_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a content.
+
+  TODO update
+  ## Examples
+
+      iex> update_transmission_content(content, %{field: new_value})
+      {:ok, %Content{}}
+
+      iex> update_transmission_content(content, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_transmission_content(%Content{message_id: nil} = content, attrs) do
+    content
+    |> Content.transmission_changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Updates a content.
+
+  TODO update
+  ## Examples
+
+      iex> update_transmission_content(content, %{field: new_value})
+      {:ok, %Content{}}
+
+      iex> update_transmission_content(content, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_message_content(%Content{transmission_id: nil} = content, attrs) do
+    content
+    |> Content.message_changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a content.
+
+  TODO update
+  ## Examples
+
+      iex> delete_content(content)
+      {:ok, %Content{}}
+
+      iex> delete_content(content)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_content(%Content{} = content), do: Repo.delete(content)
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking content changes.
+
+  TODO update
+  ## Examples
+
+      iex> change_transmission_content(content)
+      %Ecto.Changeset{data: %Content{}}
+
+  """
+  def change_transmission_content(%Content{} = content, attrs \\ %{}) do
+    Content.transmission_changeset(content, attrs)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking content changes.
+
+  TODO update
+  ## Examples
+
+      iex> change_message_content(content)
+      %Ecto.Changeset{data: %Content{}}
+
+  """
+  def change_message_content(%Content{} = content, attrs \\ %{}) do
+    Content.message_changeset(content, attrs)
+  end
+
+  @doc """
+  TODO
+  """
+  def load_contents(%Transmission{} = transmission), do: Repo.preload(transmission, :contents)
+  def load_contents(%Message{} = message), do: Repo.preload(message, :contents)
 end

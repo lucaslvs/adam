@@ -51,11 +51,13 @@ defmodule Adam.Communication.Transmission.Query do
 
   defp filter_order_by("message_type"), do: dynamic([messages: m], m.type)
 
-  defp filter_order_by("message_inserted_at_desc"), do: [desc: dynamic([messages: m], m.inserted_at)]
+  defp filter_order_by("message_inserted_at_desc"),
+    do: [desc: dynamic([messages: m], m.inserted_at)]
 
   defp filter_order_by("message_inserted_at"), do: dynamic([messages: m], m.inserted_at)
 
-  defp filter_order_by("message_updated_at_desc"), do: [desc: dynamic([messages: m], m.updated_at)]
+  defp filter_order_by("message_updated_at_desc"),
+    do: [desc: dynamic([messages: m], m.updated_at)]
 
   defp filter_order_by("message_updated_at"), do: dynamic([messages: m], m.updated_at)
 

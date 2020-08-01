@@ -51,17 +51,21 @@ defmodule Adam.Communication.Message.Query do
 
   defp filter_order_by("transmission_state"), do: dynamic([transmission: t], t.state)
 
-  defp filter_order_by("transmission_inserted_at_desc"), do: [desc: dynamic([transmission: t], t.inserted_at)]
+  defp filter_order_by("transmission_inserted_at_desc"),
+    do: [desc: dynamic([transmission: t], t.inserted_at)]
 
   defp filter_order_by("transmission_inserted_at"), do: dynamic([transmission: t], t.inserted_at)
 
-  defp filter_order_by("transmission_updated_at_desc"), do: [desc: dynamic([transmission: t], t.updated_at)]
+  defp filter_order_by("transmission_updated_at_desc"),
+    do: [desc: dynamic([transmission: t], t.updated_at)]
 
   defp filter_order_by("transmission_updated_at"), do: dynamic([transmission: t], t.updated_at)
 
-  defp filter_order_by("transmission_scheduled_at_desc"), do: [desc: dynamic([transmission: t], t.scheduled_at)]
+  defp filter_order_by("transmission_scheduled_at_desc"),
+    do: [desc: dynamic([transmission: t], t.scheduled_at)]
 
-  defp filter_order_by("transmission_scheduled_at"), do: dynamic([transmission: t], t.scheduled_at)
+  defp filter_order_by("transmission_scheduled_at"),
+    do: dynamic([transmission: t], t.scheduled_at)
 
   defp filter_order_by(_), do: []
 

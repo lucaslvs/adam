@@ -3,7 +3,7 @@ defmodule Adam.Communication.Message do
 
   import Ecto.Changeset
 
-  alias Adam.Communication.Transmission
+  alias Adam.Communication.{Content, Transmission}
   alias Adam.Information.State
   alias __MODULE__.Query
 
@@ -18,18 +18,24 @@ defmodule Adam.Communication.Message do
     field :type, :string, null: false
 
     belongs_to :transmission, Transmission
+
     has_many :states, State
+    has_many :contents, Content
 
     timestamps()
   end
 
   @doc false
   def changeset(message, attrs) do
+    attrs = transform_contents_attributes(attrs)
+
     message
     |> cast(attrs, @required_fields ++ [:state])
     |> validate_required(@required_fields)
     |> validate_inclusion(:type, @types)
     |> validate_provider()
+    |> validate_email_contents(attrs)
+    |> cast_assoc(:contents, with: &Content.message_changeset/2, required: true)
   end
 
   defp validate_provider(changeset) do
@@ -46,6 +52,59 @@ defmodule Adam.Communication.Message do
       changeset ->
         changeset
     end
+  end
+
+  defp transform_contents_attributes(attrs) do
+    case attrs do
+      %{contents: contents} when is_map(contents) ->
+        Map.put(attrs, :contents, Content.transform_in_attributes(contents))
+
+      %{"contents" => contents} when is_map(contents) ->
+        Map.put(attrs, "contents", Content.transform_in_attributes(contents))
+
+      attrs ->
+        attrs
+    end
+  end
+
+  defp validate_email_contents(changeset, attrs) do
+    case changeset do
+      %Ecto.Changeset{changes: %{type: "email"}} ->
+        validate_email_content_subject(changeset, attrs)
+
+      %Ecto.Changeset{data: %__MODULE__{type: "email"}} ->
+        validate_email_content_subject(changeset, attrs)
+
+      changeset ->
+        changeset
+    end
+  end
+
+  defp validate_email_content_subject(changeset, attrs) do
+    case attrs do
+      %{contents: contents} ->
+        validate_subject_content(changeset, contents)
+
+      %{"contents" => contents} ->
+        validate_subject_content(changeset, contents)
+
+      attrs ->
+        attrs
+    end
+  end
+
+  defp validate_subject_content(changeset, contents) do
+    if has_subject_content?(contents) do
+      changeset
+    else
+      add_error(changeset, :contents, "Subject content is required for email messages")
+    end
+  end
+
+  defp has_subject_content?(contents) do
+    Enum.any?(contents, fn content ->
+      Map.get(content, :name) == "subject" or Map.get(content, "name") == "subject"
+    end)
   end
 
   @doc false

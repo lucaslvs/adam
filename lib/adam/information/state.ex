@@ -4,6 +4,7 @@ defmodule Adam.Information.State do
   import Ecto.Changeset
 
   alias Adam.Communication.{Transmission, Message}
+  alias __MODULE__.Query
 
   @shared_states ["canceled", "failed"]
 
@@ -73,5 +74,5 @@ defmodule Adam.Information.State do
   @doc """
   TODO
   """
-  def filter(attrs), do: __MODULE__.Query.filter(attrs)
+  def filter(attrs), do: Query.filter(attrs)
 end

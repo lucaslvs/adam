@@ -7,7 +7,7 @@ defmodule Adam.Communication.Transmission do
 
   import Ecto.Changeset
 
-  alias Adam.Communication.Message
+  alias Adam.Communication.{Content, Message}
   alias Adam.Information.State
   alias __MODULE__.Query
 
@@ -21,6 +21,7 @@ defmodule Adam.Communication.Transmission do
 
     has_many :states, State
     has_many :messages, Message
+    has_many :contents, Content
 
     timestamps()
   end
@@ -28,10 +29,27 @@ defmodule Adam.Communication.Transmission do
   @doc false
   @spec changeset(transmission(), map()) :: Ecto.Changeset.t()
   def changeset(transmission, attrs) do
+    attrs = maybe_transform_contents_attributes(attrs)
+
     transmission
     |> cast(attrs, [:label, :state, :scheduled_at])
     |> validate_required([:label])
     |> maybe_schedule_for_now()
+    |> cast_assoc(:messages, with: &Message.changeset/2)
+    |> cast_assoc(:contents, with: &Content.transmission_changeset/2)
+  end
+
+  defp maybe_transform_contents_attributes(attrs) do
+    case attrs do
+      %{contents: contents} when is_map(contents) ->
+        Map.put(attrs, :contents, Content.transform_in_attributes(contents))
+
+      %{"contents" => contents} when is_map(contents) ->
+        Map.put(attrs, "contents", Content.transform_in_attributes(contents))
+
+      attrs ->
+        attrs
+    end
   end
 
   defp maybe_schedule_for_now(changeset) do

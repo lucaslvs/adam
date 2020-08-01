@@ -154,4 +154,65 @@ defmodule Adam.CommunicationTest do
       assert %Ecto.Changeset{} = Communication.change_message(message)
     end
   end
+
+  describe "contents" do
+    alias Adam.Communication.Content
+
+    @valid_attrs %{name: "some name", value: "some value"}
+    @update_attrs %{name: "some updated name", value: "some updated value"}
+    @invalid_attrs %{name: nil, value: nil}
+
+    def content_fixture(attrs \\ %{}) do
+      {:ok, content} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Communication.create_content()
+
+      content
+    end
+
+    test "list_contents/0 returns all contents" do
+      content = content_fixture()
+      assert Communication.list_contents() == [content]
+    end
+
+    test "get_content!/1 returns the content with given id" do
+      content = content_fixture()
+      assert Communication.get_content!(content.id) == content
+    end
+
+    test "create_content/1 with valid data creates a content" do
+      assert {:ok, %Content{} = content} = Communication.create_content(@valid_attrs)
+      assert content.name == "some name"
+      assert content.value == "some value"
+    end
+
+    test "create_content/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Communication.create_content(@invalid_attrs)
+    end
+
+    test "update_content/2 with valid data updates the content" do
+      content = content_fixture()
+      assert {:ok, %Content{} = content} = Communication.update_content(content, @update_attrs)
+      assert content.name == "some updated name"
+      assert content.value == "some updated value"
+    end
+
+    test "update_content/2 with invalid data returns error changeset" do
+      content = content_fixture()
+      assert {:error, %Ecto.Changeset{}} = Communication.update_content(content, @invalid_attrs)
+      assert content == Communication.get_content!(content.id)
+    end
+
+    test "delete_content/1 deletes the content" do
+      content = content_fixture()
+      assert {:ok, %Content{}} = Communication.delete_content(content)
+      assert_raise Ecto.NoResultsError, fn -> Communication.get_content!(content.id) end
+    end
+
+    test "change_content/1 returns a content changeset" do
+      content = content_fixture()
+      assert %Ecto.Changeset{} = Communication.change_content(content)
+    end
+  end
 end
