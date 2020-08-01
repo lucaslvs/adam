@@ -69,6 +69,43 @@ defmodule Adam.Communication do
   end
 
   @doc """
+  Gets a single `Transmission` by the given attributes.
+
+  Raises `Ecto.NoResultsError` if the `Transmission` with the given attributes does not exist.
+
+  ## Examples
+
+      iex> get_transmission_by!(label: "registration_confirmation")
+      %Transmission{label: "registration_confirmation"}
+
+      iex> get_transmission_by!(label: "invalid_label")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_transmission_by!(attrs) when is_map(attrs) do
+    Repo.get_by!(Transmission, attrs)
+  end
+
+  @doc """
+  Gets a single `Transmission` by the given attributes.
+
+  ## Examples
+
+      iex> get_transmission_by(label: "registration_confirmation")
+      {:ok, %Transmission{label: "registration_confirmation"}}
+
+      iex> get_transmission_by!(label: "invalid_label")
+      {:error, :not_found}
+
+  """
+  def get_transmission_by(attrs) when is_map(attrs) do
+    {:ok, get_transmission_by!(attrs)}
+  rescue
+    Ecto.NoResultsError ->
+      {:error, :not_found}
+  end
+
+  @doc """
   Creates a `Transmission` by the given attributes.
 
   ## Examples
