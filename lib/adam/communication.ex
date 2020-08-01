@@ -145,6 +145,22 @@ defmodule Adam.Communication do
   def list_messages, do: Repo.all(Message)
 
   @doc """
+  Returns a `Scriviner.Page` with a list of `Message`s filtered by the given attributes.
+
+  TODO insert examples
+
+  ## Examples
+
+      iex> filter_messages(attrs)
+      [%Message{}, ...]
+  """
+  def filter_messages(attrs \\ %{}) do
+    attrs
+    |> Message.filter()
+    |> Repo.paginate(attrs)
+  end
+
+  @doc """
   Gets a single `Message`.
 
   Raises `Ecto.NoResultsError` if the `Message` does not exist.
