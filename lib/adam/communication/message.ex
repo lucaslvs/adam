@@ -5,6 +5,7 @@ defmodule Adam.Communication.Message do
 
   alias Adam.Communication.Transmission
   alias Adam.Information.State
+  alias __MODULE__.Query
 
   @required_fields [:type, :provider, :sender, :receiver]
   @types ["email", "sms"]
@@ -60,6 +61,8 @@ defmodule Adam.Communication.Message do
   defp add_pending_state(changeset) do
     put_change(changeset, :states, [%{value: "pending"}])
   end
+
+  def filter(attrs), do: Query.filter(attrs)
 
   def to_send(message), do: transition_to(message, "sending")
 
