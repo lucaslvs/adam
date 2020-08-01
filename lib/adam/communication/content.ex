@@ -31,12 +31,6 @@ defmodule Adam.Communication.Content do
     |> must_belong_to_transmission_or_message(:message)
   end
 
-  def transform_in_attributes(attrs) when is_map(attrs) do
-    Enum.map(attrs, fn {name, value} ->
-      Map.new(name: name, value: value)
-    end)
-  end
-
   defp changeset(content, attrs) do
     content
     |> cast(attrs, [:name, :value])
@@ -51,5 +45,11 @@ defmodule Adam.Communication.Content do
       name: :must_belong_to_transmission_or_message,
       message: "Must belong to a transmission or a message"
     )
+  end
+
+  def transform_in_attributes(attrs) when is_map(attrs) do
+    Enum.map(attrs, fn {name, value} ->
+      Map.new(name: name, value: value)
+    end)
   end
 end
