@@ -118,7 +118,8 @@ defmodule Adam.Communication do
 
   """
   def create_transmission(attrs \\ %{}) do
-    %Transmission{}
+    Transmission
+    |> struct!()
     |> Transmission.create_changeset(attrs)
     |> Repo.insert()
   end
@@ -233,6 +234,43 @@ defmodule Adam.Communication do
   end
 
   @doc """
+  Gets a single `Message` by the given attributes.
+
+  Raises `Ecto.NoResultsError` if the `Message` with the given attributes does not exist.
+
+  ## Examples
+
+      iex> get_message_by!(type: "email", provider: "sendgrid")
+      %Message{type: "email", provider: "sendgrid"}
+
+      iex> get_message_by!(type: "invalid_type", provider: "invalid_provider")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_message_by!(attrs) when is_map(attrs) do
+    Repo.get_by!(Message, attrs)
+  end
+
+  @doc """
+  Gets a single `Message` by the given attributes.
+
+  ## Examples
+
+      iex> get_message_by(type: "email", provider: "sendgrid")
+      {:ok, %Message{type: "email", provider: "sendgrid"}}
+
+      iex> get_message_by(type: "invalid_type", provider: "invalid_provider")
+      {:error, :not_found}
+
+  """
+  def get_message_by(attrs) when is_map(attrs) do
+    {:ok, get_message_by!(attrs)}
+  rescue
+    Ecto.NoResultsError ->
+      {:error, :not_found}
+  end
+
+  @doc """
   Creates a `Message`.
 
   ## Examples
@@ -245,7 +283,8 @@ defmodule Adam.Communication do
 
   """
   def create_message(attrs \\ %{}) do
-    %Message{}
+    Message
+    |> struct!()
     |> Message.changeset(attrs)
     |> Repo.insert()
   end
