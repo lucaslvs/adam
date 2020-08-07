@@ -7,6 +7,16 @@ defmodule AdamWeb.V1.MessageView do
     %{messages: render_many(messages, MessageView, "message.json")}
   end
 
+  def render("index.json", %{page: %Scrivener.Page{} = page}) do
+    %{
+      messages: render_many(page.entries, MessageView, "message.json"),
+      page_number: page.page_number,
+      page_size: page.page_size,
+      total_transmissions: page.total_entries,
+      total_pages: page.total_pages
+    }
+  end
+
   def render("show.json", %{message: message}) do
     %{message: render_one(message, MessageView, "message.json")}
   end
@@ -16,6 +26,7 @@ defmodule AdamWeb.V1.MessageView do
       id: message.id,
       inserted_at: message.inserted_at,
       updated_at: message.updated_at,
+      transmission_id: message.transmission_id,
       state: message.state,
       type: message.type,
       provider: message.provider,

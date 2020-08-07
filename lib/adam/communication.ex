@@ -218,7 +218,11 @@ defmodule Adam.Communication do
       ** (Ecto.NoResultsError)
 
   """
-  def get_message!(id), do: Repo.get!(Message, id)
+  def get_message!(id, preload \\ []) do
+    Message
+    |> Repo.get!(id)
+    |> Repo.preload(preload)
+  end
 
   @doc """
   Gets a single `Message` by the given `id`.
@@ -232,8 +236,8 @@ defmodule Adam.Communication do
       {:error, :not_found}
 
   """
-  def get_message(id) do
-    {:ok, get_message!(id)}
+  def get_message(id, preload \\ []) do
+    {:ok, get_message!(id, preload)}
   rescue
     Ecto.NoResultsError ->
       {:error, :not_found}
@@ -253,8 +257,10 @@ defmodule Adam.Communication do
       ** (Ecto.NoResultsError)
 
   """
-  def get_message_by!(attrs) when is_map(attrs) do
-    Repo.get_by!(Message, attrs)
+  def get_message_by!(attrs, preload \\ []) when is_map(attrs) do
+    Message
+    |> Repo.get_by!(attrs)
+    |> Repo.preload(preload)
   end
 
   @doc """
@@ -269,8 +275,8 @@ defmodule Adam.Communication do
       {:error, :not_found}
 
   """
-  def get_message_by(attrs) when is_map(attrs) do
-    {:ok, get_message_by!(attrs)}
+  def get_message_by(attrs, preload \\ []) when is_map(attrs) do
+    {:ok, get_message_by!(attrs, preload)}
   rescue
     Ecto.NoResultsError ->
       {:error, :not_found}

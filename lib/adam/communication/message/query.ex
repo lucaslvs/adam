@@ -9,6 +9,7 @@ defmodule Adam.Communication.Message.Query do
     |> join(:inner, [m], assoc(m, :transmission), as: :transmission)
     |> order_by(^filter_order_by(attrs["order_by"]))
     |> where(^filter_where(attrs))
+    |> preload([m], ^attrs["preload"])
   end
 
   defp filter_order_by("provider_desc"), do: [desc: dynamic([m], m.provider)]

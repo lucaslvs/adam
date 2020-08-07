@@ -13,6 +13,8 @@ defmodule AdamWeb.Router do
       resources "/transmissions", TransmissionController, except: [:new, :edit, :delete] do
         resources "/messages", MessageController, only: [:index, :show]
       end
+
+      resources "/messages", MessageController, only: [:index, :show]
     end
   end
 

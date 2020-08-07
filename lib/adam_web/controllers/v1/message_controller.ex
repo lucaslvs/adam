@@ -6,38 +6,38 @@ defmodule AdamWeb.V1.MessageController do
 
   action_fallback AdamWeb.FallbackController
 
-  def index(conn, _params) do
-    messages = Communication.list_messages()
-    render(conn, "index.json", messages: messages)
+  def index(conn, params) do
+    messages_page =
+      params
+      |> Map.put("preload", [:contents])
+      |> Communication.filter_messages()
+
+    render(conn, "index.json", page: messages_page)
   end
 
-  def create(conn, %{"message" => message_params}) do
-    with {:ok, %Message{} = message} <- Communication.create_message(message_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.v1_message_path(conn, :show, message))
-      |> render("show.json", message: message)
-    end
-  end
+  def show(conn, params) do
+    params = format_params(params)
 
-  def show(conn, %{"id" => id}) do
-    message = Communication.get_message!(id)
-    render(conn, "show.json", message: message)
-  end
-
-  def update(conn, %{"id" => id, "message" => message_params}) do
-    message = Communication.get_message!(id)
-
-    with {:ok, %Message{} = message} <- Communication.update_message(message, message_params) do
+    with {:ok, %Message{} = message} <- Communication.get_message_by(params, [:contents]) do
       render(conn, "show.json", message: message)
     end
   end
 
-  # def delete(conn, %{"id" => id}) do
-  #   message = Communication.get_message!(id)
+  # def update(conn, %{"message" => message_params} = params) do
+  #   params =
+  #     params
+  #     |> Map.take(["id", "transmission_id"])
+  #     |> format_params()
 
-  #   with {:ok, %Message{}} <- Communication.delete_message(message) do
-  #     send_resp(conn, :no_content, "")
+  #   with {:ok, %Message{} = message} <- Communication.get_message_by(params, [:contents]),
+  #        {:ok, %Message{} = message} <- Communication.update_message(message, message_params) do
+  #     render(conn, "show.json", message: message)
   #   end
   # end
+
+  defp format_params(params) do
+    params
+    |> Enum.map(fn {key, value} -> Map.new("#{key}": value) end)
+    |> Enum.reduce(Map.new(), &Map.merge(&2, &1))
+  end
 end
