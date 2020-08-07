@@ -6,8 +6,11 @@ defmodule AdamWeb.V1.TransmissionController do
   action_fallback AdamWeb.FallbackController
 
   def index(conn, params) do
-    params = Map.put(params, "preload", [:contents, messages: :contents])
-    transmissions_page = Communication.filter_transmissions(params)
+    transmissions_page =
+      params
+      |> Map.put("preload", [:contents, messages: :contents])
+      |> Communication.filter_transmissions()
+
     render(conn, "index.json", page: transmissions_page)
   end
 
