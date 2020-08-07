@@ -49,7 +49,11 @@ defmodule Adam.Communication do
       ** (Ecto.NoResultsError)
 
   """
-  def get_transmission!(id), do: Repo.get!(Transmission, id)
+  def get_transmission!(id, preload \\ []) do
+    Transmission
+    |> Repo.get!(id)
+    |> Repo.preload(preload)
+  end
 
   @doc """
   Gets a single `Transmission` by the given `id`.
@@ -63,8 +67,8 @@ defmodule Adam.Communication do
       {:error, :not_found}
 
   """
-  def get_transmission(id) do
-    {:ok, get_transmission!(id)}
+  def get_transmission(id, preload \\ []) do
+    {:ok, get_transmission!(id, preload)}
   rescue
     Ecto.NoResultsError ->
       {:error, :not_found}

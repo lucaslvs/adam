@@ -1,23 +1,27 @@
 defmodule AdamWeb.V1.MessageView do
   use AdamWeb, :view
-  alias AdamWeb.V1.MessageView
+
+  alias AdamWeb.V1.{ContentView, MessageView}
 
   def render("index.json", %{messages: messages}) do
-    %{data: render_many(messages, MessageView, "message.json")}
+    %{messages: render_many(messages, MessageView, "message.json")}
   end
 
   def render("show.json", %{message: message}) do
-    %{data: render_one(message, MessageView, "message.json")}
+    %{message: render_one(message, MessageView, "message.json")}
   end
 
   def render("message.json", %{message: message}) do
     %{
       id: message.id,
+      inserted_at: message.inserted_at,
+      updated_at: message.updated_at,
       state: message.state,
       type: message.type,
       provider: message.provider,
       sender: message.sender,
-      receiver: message.receiver
+      receiver: message.receiver,
+      contents: ContentView.render_many_contents(message.contents)
     }
   end
 end

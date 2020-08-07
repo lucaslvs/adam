@@ -14,6 +14,14 @@ defmodule AdamWeb.FallbackController do
     |> render("error.json", changeset: changeset)
   end
 
+  # This clause handles errors returned by Ecto's insert/update/delete.
+  def call(conn, {:error, message, _}) when is_binary(message) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(AdamWeb.ChangesetView)
+    |> render("error.json", message: message)
+  end
+
   # This clause is an example of how to handle resources that cannot be found.
   def call(conn, {:error, :not_found}) do
     conn

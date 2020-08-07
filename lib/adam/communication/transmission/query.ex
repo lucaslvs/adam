@@ -9,6 +9,7 @@ defmodule Adam.Communication.Transmission.Query do
     |> join(:inner, [t], assoc(t, :messages), as: :messages)
     |> order_by(^filter_order_by(attrs["order_by"]))
     |> where(^filter_where(attrs))
+    |> preload([t], ^attrs["preload"])
   end
 
   defp filter_order_by("label_desc"), do: [desc: dynamic([t], t.label)]

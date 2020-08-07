@@ -29,14 +29,10 @@ defmodule Adam.Communication.Transmission do
   @doc false
   @spec changeset(transmission(), map()) :: Ecto.Changeset.t()
   def changeset(transmission, attrs) do
-    attrs = maybe_transform_contents_attributes(attrs)
-
     transmission
-    |> cast(attrs, [:label, :state, :scheduled_at])
+    |> cast(maybe_transform_contents_attributes(attrs), [:label, :state, :scheduled_at])
     |> validate_required([:label])
     |> maybe_schedule_for_now()
-    |> cast_assoc(:messages, with: &Message.changeset/2)
-    |> cast_assoc(:contents, with: &Content.transmission_changeset/2)
   end
 
   defp maybe_transform_contents_attributes(attrs) do
@@ -66,13 +62,15 @@ defmodule Adam.Communication.Transmission do
   @doc false
   @spec create_changeset(transmission(), map()) :: Ecto.Changeset.t()
   def create_changeset(transmission, attrs) do
-    attrs = Map.take(attrs, [:label, :scheduled_at])
-
     transmission
-    |> changeset(attrs)
+    |> changeset(take_creation_permitted_attributes(attrs))
     |> add_scheduled_state()
     |> cast_assoc(:states, with: &State.transmission_changeset/2, required: true)
     |> cast_assoc(:messages, with: &Message.create_changeset/2, required: true)
+  end
+
+  defp take_creation_permitted_attributes(attrs) do
+    Map.take(attrs, [:label, "label", :scheduled_at, "scheduled_at", :messages, "messages", :contents, "contents"])
   end
 
   defp add_scheduled_state(changeset) do

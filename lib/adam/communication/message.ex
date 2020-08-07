@@ -88,8 +88,8 @@ defmodule Adam.Communication.Message do
       %{"contents" => contents} ->
         validate_subject_content(changeset, contents)
 
-      attrs ->
-        attrs
+      _ ->
+        changeset
     end
   end
 
@@ -109,12 +109,15 @@ defmodule Adam.Communication.Message do
 
   @doc false
   def create_changeset(message, attrs) do
-    attrs = Map.take(attrs, @required_fields)
-
     message
-    |> changeset(attrs)
+    |> changeset(take_creation_permitted_attributes(attrs))
     |> add_pending_state()
     |> cast_assoc(:states, with: &State.message_changeset/2, required: true)
+  end
+
+  defp take_creation_permitted_attributes(attrs) do
+    creation_permitted_attributes = Enum.map(@required_fields, &to_string/1) ++ [:contents, "contents"]
+    Map.take(attrs, @required_fields ++ creation_permitted_attributes)
   end
 
   defp add_pending_state(changeset) do
