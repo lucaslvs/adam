@@ -2,6 +2,7 @@ defmodule AdamWeb.V1.TransmissionController do
   use AdamWeb, :controller
 
   alias Adam.Communication
+  alias Adam.Communication.Transmission
 
   action_fallback AdamWeb.FallbackController
 
@@ -15,7 +16,7 @@ defmodule AdamWeb.V1.TransmissionController do
   end
 
   def create(conn, %{"transmission" => params}) do
-    with {:ok, transmission} <- Communication.create_transmission(params) do
+    with {:ok, %Transmission{} = transmission} <- Communication.create_transmission(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.v1_transmission_path(conn, :show, transmission))
@@ -24,16 +25,17 @@ defmodule AdamWeb.V1.TransmissionController do
   end
 
   def show(conn, %{"id" => id}) do
-    with {:ok, transmission} <-
+    with {:ok, %Transmission{} = transmission} <-
            Communication.get_transmission(id, [:contents, messages: :contents]) do
       render(conn, "show.json", transmission: transmission)
     end
   end
 
   def update(conn, %{"id" => id, "transmission" => params}) do
-    with {:ok, transmission} <-
+    with {:ok, %Transmission{} = transmission} <-
            Communication.get_transmission(id, [:contents, messages: :contents]),
-         {:ok, transmission} <- Communication.update_transmission(transmission, params) do
+         {:ok, %Transmission{} = transmission} <-
+           Communication.update_transmission(transmission, params) do
       render(conn, "show.json", transmission: transmission)
     end
   end
