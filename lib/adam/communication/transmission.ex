@@ -70,7 +70,16 @@ defmodule Adam.Communication.Transmission do
   end
 
   defp take_creation_permitted_attributes(attrs) do
-    Map.take(attrs, [:label, "label", :scheduled_at, "scheduled_at", :messages, "messages", :contents, "contents"])
+    Map.take(attrs, [
+      :label,
+      :scheduled_at,
+      :messages,
+      :contents,
+      "label",
+      "scheduled_at",
+      "messages",
+      "contents"
+    ])
   end
 
   defp add_scheduled_state(changeset) do

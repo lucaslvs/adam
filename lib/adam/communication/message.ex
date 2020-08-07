@@ -116,7 +116,9 @@ defmodule Adam.Communication.Message do
   end
 
   defp take_creation_permitted_attributes(attrs) do
-    creation_permitted_attributes = Enum.map(@required_fields, &to_string/1) ++ [:contents, "contents"]
+    creation_permitted_attributes =
+      Enum.map(@required_fields, &to_string/1) ++ [:contents, "contents"]
+
     Map.take(attrs, @required_fields ++ creation_permitted_attributes)
   end
 

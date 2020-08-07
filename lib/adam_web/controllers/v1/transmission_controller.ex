@@ -21,13 +21,15 @@ defmodule AdamWeb.V1.TransmissionController do
   end
 
   def show(conn, %{"id" => id}) do
-    with {:ok, transmission} <- Communication.get_transmission(id, [:contents, messages: :contents]) do
+    with {:ok, transmission} <-
+           Communication.get_transmission(id, [:contents, messages: :contents]) do
       render(conn, "show.json", transmission: transmission)
     end
   end
 
   def update(conn, %{"id" => id, "transmission" => params}) do
-    with {:ok, transmission} <- Communication.get_transmission(id, [:contents, messages: :contents]),
+    with {:ok, transmission} <-
+           Communication.get_transmission(id, [:contents, messages: :contents]),
          {:ok, transmission} <- Communication.update_transmission(transmission, params) do
       render(conn, "show.json", transmission: transmission)
     end
