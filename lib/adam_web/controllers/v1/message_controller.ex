@@ -23,18 +23,6 @@ defmodule AdamWeb.V1.MessageController do
     end
   end
 
-  # def update(conn, %{"message" => message_params} = params) do
-  #   params =
-  #     params
-  #     |> Map.take(["id", "transmission_id"])
-  #     |> format_params()
-
-  #   with {:ok, %Message{} = message} <- Communication.get_message_by(params, [:contents]),
-  #        {:ok, %Message{} = message} <- Communication.update_message(message, message_params) do
-  #     render(conn, "show.json", message: message)
-  #   end
-  # end
-
   defp format_params(params) do
     params
     |> Enum.map(fn {key, value} -> Map.new("#{key}": value) end)
