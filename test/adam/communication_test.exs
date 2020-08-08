@@ -33,7 +33,7 @@ defmodule Adam.CommunicationTest do
 
     test "create_transmission/1 with valid data creates a transmission" do
       assert {:ok, %Transmission{} = transmission} =
-               Communication.create_transmission(@valid_attrs)
+               Communication.schedule_transmission(@valid_attrs)
 
       assert transmission.label == "some label"
       assert transmission.scheduled_at == ~N[2010-04-17 14:00:00]
@@ -41,27 +41,7 @@ defmodule Adam.CommunicationTest do
     end
 
     test "create_transmission/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Communication.create_transmission(@invalid_attrs)
-    end
-
-    test "update_transmission/2 with valid data updates the transmission" do
-      transmission = insert(:transmission)
-
-      assert {:ok, %Transmission{} = transmission} =
-               Communication.update_transmission(transmission, @update_attrs)
-
-      assert transmission.label == "some updated label"
-      assert transmission.scheduled_at == ~N[2011-05-18 15:01:01]
-      assert transmission.state == "some updated state"
-    end
-
-    test "update_transmission/2 with invalid data returns error changeset" do
-      transmission = insert(:transmission)
-
-      assert {:error, %Ecto.Changeset{}} =
-               Communication.update_transmission(transmission, @invalid_attrs)
-
-      assert transmission == Communication.get_transmission!(transmission.id)
+      assert {:error, %Ecto.Changeset{}} = Communication.schedule_transmission(@invalid_attrs)
     end
 
     # test "delete_transmission/1 deletes the transmission" do
@@ -112,19 +92,6 @@ defmodule Adam.CommunicationTest do
     test "get_message!/1 returns the message with given id" do
       message = message_fixture()
       assert Communication.get_message!(message.id) == message
-    end
-
-    test "create_message/1 with valid data creates a message" do
-      assert {:ok, %Message{} = message} = Communication.create_message(@valid_attrs)
-      assert message.provider == "some provider"
-      assert message.receiver == "some receiver"
-      assert message.sender == "some sender"
-      assert message.state == "some state"
-      assert message.type == "some type"
-    end
-
-    test "create_message/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Communication.create_message(@invalid_attrs)
     end
 
     test "update_message/2 with valid data updates the message" do

@@ -17,7 +17,7 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
   @invalid_attrs %{label: nil, scheduled_at: nil, state: nil}
 
   def fixture(:transmission) do
-    {:ok, transmission} = Communication.create_transmission(@create_attrs)
+    {:ok, transmission} = Communication.schedule_transmission(@create_attrs)
     transmission
   end
 

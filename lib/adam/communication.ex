@@ -3,21 +3,8 @@ defmodule Adam.Communication do
   The Communication context.
   """
 
-  import Adam.Factory
-
   alias Adam.Repo
   alias __MODULE__.{Content, Transmission, Message}
-
-  @doc """
-  List all `Transmission`s.
-
-  ## Examples
-
-      iex> list_transmissions()
-      [%Transmission{}, ...]
-
-  """
-  def list_transmissions, do: Repo.all(Transmission)
 
   @doc """
   Returns a `Scriviner.Page` with a list of `Transmission`s filtered by the given attributes.
@@ -116,36 +103,18 @@ defmodule Adam.Communication do
 
   ## Examples
 
-      iex> create_transmission(%{label: "registration_confirmation"})
+      iex> schedule_transmission(%{label: "registration_confirmation"})
       {:ok, %Transmission{label: "registration_confirmation"}}
 
-      iex> create_transmission(%{field: bad_value})
+      iex> schedule_transmission(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_transmission(attrs \\ %{}) do
+  def schedule_transmission(attrs \\ %{}) do
     Transmission
     |> struct!()
-    |> Transmission.create_changeset(attrs)
+    |> Transmission.schedule_changeset(attrs)
     |> Repo.insert()
-  end
-
-  @doc """
-  Updates a `Transmission` by the given attributes.
-
-  ## Examples
-
-      iex> update_transmission(transmission, %{label: "new_value"})
-      {:ok, %Transmission{label: "new_value"}}
-
-      iex> update_transmission(transmission, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_transmission(%Transmission{} = transmission, attrs) do
-    transmission
-    |> change_transmission(attrs)
-    |> Repo.update()
   end
 
   @doc """
@@ -176,17 +145,6 @@ defmodule Adam.Communication do
       }
   """
   def load_transmission(%Message{} = message), do: Repo.preload(message, :transmission)
-
-  @doc """
-  Returns the list of `Message`.
-
-  ## Examples
-
-      iex> list_messages()
-      [%Message{}, ...]
-
-  """
-  def list_messages, do: Repo.all(Message)
 
   @doc """
   Returns a `Scriviner.Page` with a list of `Message`s filtered by the given attributes.
@@ -283,25 +241,6 @@ defmodule Adam.Communication do
   end
 
   @doc """
-  Creates a `Message`.
-
-  ## Examples
-
-      iex> create_message(%{field: value})
-      {:ok, %Message{}}
-
-      iex> create_message(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_message(attrs \\ %{}) do
-    Message
-    |> struct!()
-    |> Message.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
   Updates a `Message`.
 
   ## Examples
@@ -348,128 +287,6 @@ defmodule Adam.Communication do
       }
   """
   def load_messages(%Transmission{} = transmission), do: Repo.preload(transmission, :messages)
-
-  @doc """
-  Returns the list of contents.
-
-  TODO update
-  ## Examples
-
-      iex> list_contents()
-      [%Content{}, ...]
-
-  """
-  def list_contents, do: Repo.all(Content)
-
-  @doc """
-  Gets a single content.
-
-  Raises `Ecto.NoResultsError` if the Content does not exist.
-
-  TODO update
-  ## Examples
-
-      iex> get_content!(123)
-      %Content{}
-
-      iex> get_content!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_content!(id), do: Repo.get!(Content, id)
-
-  @doc """
-  Creates a content.
-
-  TODO update
-  ## Examples
-
-      iex> create_transmission_content(%{field: value})
-      {:ok, %Content{}}
-
-      iex> create_transmission_content(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_transmission_content(%Transmission{} = transmission, attrs \\ %{}) do
-    :transmission_content
-    |> build(transmission: transmission)
-    |> Content.transmission_changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Creates a content.
-
-  TODO update
-  ## Examples
-
-      iex> create_message_content(%{field: value})
-      {:ok, %Content{}}
-
-      iex> create_message_content(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_message_content(%Message{} = message, attrs \\ %{}) do
-    :message_content
-    |> build(message: message)
-    |> Content.message_changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a content.
-
-  TODO update
-  ## Examples
-
-      iex> update_transmission_content(content, %{field: new_value})
-      {:ok, %Content{}}
-
-      iex> update_transmission_content(content, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_transmission_content(%Content{message_id: nil} = content, attrs) do
-    content
-    |> Content.transmission_changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Updates a content.
-
-  TODO update
-  ## Examples
-
-      iex> update_transmission_content(content, %{field: new_value})
-      {:ok, %Content{}}
-
-      iex> update_transmission_content(content, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_message_content(%Content{transmission_id: nil} = content, attrs) do
-    content
-    |> Content.message_changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a content.
-
-  TODO update
-  ## Examples
-
-      iex> delete_content(content)
-      {:ok, %Content{}}
-
-      iex> delete_content(content)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_content(%Content{} = content), do: Repo.delete(content)
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking content changes.

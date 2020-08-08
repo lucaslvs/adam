@@ -60,8 +60,8 @@ defmodule Adam.Communication.Transmission do
   end
 
   @doc false
-  @spec create_changeset(transmission(), map()) :: Ecto.Changeset.t()
-  def create_changeset(transmission, attrs) do
+  @spec schedule_changeset(transmission(), map()) :: Ecto.Changeset.t()
+  def schedule_changeset(transmission, attrs) do
     transmission
     |> changeset(take_creation_permitted_attributes(attrs))
     |> add_scheduled_state()
