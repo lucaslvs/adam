@@ -1,4 +1,6 @@
 defmodule Adam.Communication.Message.Machinery do
+  @moduledoc false
+
   use Machinery,
     states: [
       "pending",

@@ -1,4 +1,6 @@
 defmodule Adam.Factory do
+  @moduledoc false
+
   use ExMachina.Ecto, repo: Adam.Repo
 
   alias Adam.Communication.{Content, Transmission, Message}

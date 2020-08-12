@@ -1,4 +1,6 @@
 defmodule Adam.Communication.Message.Query do
+  @moduledoc false
+
   import Ecto.Query, warn: false
 
   alias Adam.Communication.Message

@@ -1,4 +1,6 @@
 defmodule AdamWeb.Information do
+  @moduledoc false
+
   use Xcribe.Information
 
   xcribe_info do

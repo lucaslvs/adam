@@ -1,4 +1,6 @@
 defmodule AdamWeb.Router do
+  @moduledoc false
+
   use AdamWeb, :router
 
   pipeline :api do

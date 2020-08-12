@@ -1,4 +1,6 @@
 defmodule Adam.Communication.Transmission.Machinery do
+  @moduledoc false
+
   use Machinery,
     states: [
       "scheduled",

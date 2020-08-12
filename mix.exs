@@ -100,10 +100,8 @@ defmodule Adam.MixProject do
   defp groups_for_modules do
     [
       Core: [
-        Adam.Application,
         Adam.Repo,
         Adam.PubSub,
-        Adam.Factory,
         Adam.Communication,
         Adam.Information
       ],
@@ -117,27 +115,7 @@ defmodule Adam.MixProject do
       ],
       Web: [
         AdamWeb,
-        AdamWeb.Endpoint,
-        AdamWeb.Router,
-        AdamWeb.Telemetry,
-        AdamWeb.Information,
         AdamWeb.Gettext
-      ],
-      Channels: [
-        AdamWeb.UserSocket
-      ],
-      Controllers: [
-        AdamWeb.V1.TransmissionController,
-        AdamWeb.V1.MessageController,
-        AdamWeb.FallbackController
-      ],
-      Views: [
-        AdamWeb.V1.TransmissionView,
-        AdamWeb.V1.MessageView,
-        AdamWeb.V1.ContentView,
-        AdamWeb.ChangesetView,
-        AdamWeb.ErrorView,
-        AdamWeb.ErrorHelpers,
       ]
     ]
   end

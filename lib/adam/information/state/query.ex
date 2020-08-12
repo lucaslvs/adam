@@ -1,4 +1,6 @@
 defmodule Adam.Information.State.Query do
+  @moduledoc false
+
   import Ecto.Query, warn: false
 
   alias Adam.Information.State
