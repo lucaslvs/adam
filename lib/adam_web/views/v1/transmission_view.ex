@@ -1,4 +1,6 @@
 defmodule AdamWeb.V1.TransmissionView do
+  @moduledoc false
+
   use AdamWeb, :view
 
   alias AdamWeb.V1.{ContentView, TransmissionView, MessageView}

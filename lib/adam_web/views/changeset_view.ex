@@ -1,4 +1,6 @@
 defmodule AdamWeb.ChangesetView do
+  @moduledoc false
+
   use AdamWeb, :view
 
   @doc """

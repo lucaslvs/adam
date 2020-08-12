@@ -1,4 +1,6 @@
 defmodule AdamWeb.V1.MessageController do
+  @moduledoc false
+
   use AdamWeb, :controller
 
   alias Adam.Communication

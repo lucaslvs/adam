@@ -1,4 +1,6 @@
 defmodule AdamWeb.ErrorView do
+  @moduledoc false
+
   use AdamWeb, :view
 
   # If you want to customize a particular status code

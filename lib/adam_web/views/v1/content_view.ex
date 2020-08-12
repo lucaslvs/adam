@@ -1,5 +1,8 @@
 defmodule AdamWeb.V1.ContentView do
+  @moduledoc false
+
   use AdamWeb, :view
+
   alias AdamWeb.V1.ContentView
 
   def render("contents.json", %{contents: contents}) do

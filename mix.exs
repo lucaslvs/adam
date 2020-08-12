@@ -115,7 +115,9 @@ defmodule Adam.MixProject do
       ],
       Web: [
         AdamWeb,
-        AdamWeb.Gettext
+        AdamWeb.Gettext,
+        AdamWeb.ErrorHelpers,
+        AdamWeb.FallbackController
       ]
     ]
   end
