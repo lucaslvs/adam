@@ -10,7 +10,10 @@ defmodule Adam.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      name: "Adam",
+      source_url: "https://github.com/lucaslvs/adam",
+      docs: docs()
     ]
   end
 
@@ -47,7 +50,21 @@ defmodule Adam.MixProject do
       {:ex_machina, "~> 2.4"},
       {:scrivener_ecto, "~> 2.0"},
       {:casex, "~> 0.4.0"},
-      {:xcribe, "~> 0.7.3"}
+      {:xcribe, "~> 0.7.3"},
+      {:ex_doc, "~> 0.22.2", only: :dev, runtime: false},
+    ]
+  end
+
+  # Specifies the project documentation structure.
+  # For generate project documentation, run:
+  #
+  #     $ mix docs
+  #
+  # To see all options available when generating docs, run `mix help docs`.
+  defp docs do
+    [
+      main: "Adam",
+      extras: ["README.md"]
     ]
   end
 
