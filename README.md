@@ -1,5 +1,7 @@
 # Adam
 
+Adam is a microservice specializing in sending communications transmission across multiple channels and their providers.
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`

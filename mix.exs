@@ -13,7 +13,10 @@ defmodule Adam.MixProject do
       deps: deps(),
       name: "Adam",
       source_url: "https://github.com/lucaslvs/adam",
-      docs: docs()
+      docs: docs(),
+      description: """
+      Adam is a microservice specializing in sending communications transmission across multiple channels and their providers.
+      """
     ]
   end
 
@@ -51,7 +54,7 @@ defmodule Adam.MixProject do
       {:scrivener_ecto, "~> 2.0"},
       {:casex, "~> 0.4.0"},
       {:xcribe, "~> 0.7.3"},
-      {:ex_doc, "~> 0.22.2", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.22.2", only: :dev, runtime: false}
     ]
   end
 
@@ -64,7 +67,78 @@ defmodule Adam.MixProject do
   defp docs do
     [
       main: "Adam",
-      extras: ["README.md"]
+      groups_for_modules: groups_for_modules(),
+      extras: extras(),
+      groups_for_extras: groups_for_extras()
+    ]
+  end
+
+  defp extras do
+    [
+      "guides/introduction/overview.md",
+      "guides/introduction/installation.md",
+      "guides/introduction/up_and_running.md",
+      "guides/directory_structure.md",
+      "guides/mix_tasks.md",
+      "guides/development.md",
+      "guides/testing.md",
+      "guides/deployment/deployment.md",
+      "guides/deployment/releases.md",
+      "guides/troubleshooting/postback_configuration.md"
+    ]
+  end
+
+  defp groups_for_extras do
+    [
+      Introduction: ~r/guides\/introduction\/.?/,
+      Guides: ~r/guides\/[^\/]+\.md/,
+      Deployment: ~r/guides\/deployment\/.?/,
+      Troubleshooting: ~r/guides\/troubleshooting\/.?/
+    ]
+  end
+
+  defp groups_for_modules do
+    [
+      Core: [
+        Adam.Application,
+        Adam.Repo,
+        Adam.PubSub,
+        Adam.Factory,
+        Adam.Communication,
+        Adam.Information
+      ],
+      Communication: [
+        Adam.Communication.Transmission,
+        Adam.Communication.Message,
+        Adam.Communication.Content
+      ],
+      Information: [
+        Adam.Information.State
+      ],
+      Web: [
+        AdamWeb,
+        AdamWeb.Endpoint,
+        AdamWeb.Router,
+        AdamWeb.Telemetry,
+        AdamWeb.Information,
+        AdamWeb.Gettext
+      ],
+      Channels: [
+        AdamWeb.UserSocket
+      ],
+      Controllers: [
+        AdamWeb.V1.TransmissionController,
+        AdamWeb.V1.MessageController,
+        AdamWeb.FallbackController
+      ],
+      Views: [
+        AdamWeb.V1.TransmissionView,
+        AdamWeb.V1.MessageView,
+        AdamWeb.V1.ContentView,
+        AdamWeb.ChangesetView,
+        AdamWeb.ErrorView,
+        AdamWeb.ErrorHelpers,
+      ]
     ]
   end
 
