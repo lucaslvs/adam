@@ -11,6 +11,11 @@ defmodule Adam.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.html": :test
+      ],
       name: "Adam",
       source_url: "https://github.com/lucaslvs/adam",
       docs: docs(),
@@ -54,7 +59,8 @@ defmodule Adam.MixProject do
       {:scrivener_ecto, "~> 2.0"},
       {:casex, "~> 0.4.0"},
       {:xcribe, "~> 0.7.3"},
-      {:ex_doc, "~> 0.22.2", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.22.2", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.13.1", only: :test}
     ]
   end
 
