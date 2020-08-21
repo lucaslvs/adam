@@ -334,4 +334,252 @@ defmodule Adam.Communication.TransmissionTest do
                Transmission.to_incomplete(transmission)
     end
   end
+
+  describe "is_scheduled?/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "transmitted"),
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "incomplete"),
+        insert(:transmission, state: "canceled"),
+        insert(:transmission, state: "failed")
+      ]
+
+      {:ok, transmissions: transmissions}
+    end
+
+    test "should returns true when receive a transmission with 'scheduled' state", %{
+      transmissions: [transmission | _]
+    } do
+      assert Transmission.is_scheduled?(transmission)
+    end
+
+    test "should returns false when receive a transmission without 'scheduled' state", %{
+      transmissions: [_ | transmissions]
+    } do
+      Enum.each(transmissions, fn transmission ->
+        refute Transmission.is_scheduled?(transmission)
+      end)
+    end
+  end
+
+  describe "is_performing?/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "transmitted"),
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "incomplete"),
+        insert(:transmission, state: "canceled"),
+        insert(:transmission, state: "failed")
+      ]
+
+      {:ok, transmissions: transmissions}
+    end
+
+    test "should returns true when receive a transmission with 'performing' state", %{
+      transmissions: [transmission | _]
+    } do
+      assert Transmission.is_performing?(transmission)
+    end
+
+    test "should returns false when receive a transmission without 'performing' state", %{
+      transmissions: [_ | transmissions]
+    } do
+      Enum.each(transmissions, fn transmission ->
+        refute Transmission.is_performing?(transmission)
+      end)
+    end
+  end
+
+  describe "is_canceled?/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "canceled"),
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "transmitted"),
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "incomplete"),
+        insert(:transmission, state: "failed")
+      ]
+
+      {:ok, transmissions: transmissions}
+    end
+
+    test "should returns true when receive a transmission with 'canceled' state", %{
+      transmissions: [transmission | _]
+    } do
+      assert Transmission.is_canceled?(transmission)
+    end
+
+    test "should returns false when receive a transmission without 'canceled' state", %{
+      transmissions: [_ | transmissions]
+    } do
+      Enum.each(transmissions, fn transmission ->
+        refute Transmission.is_canceled?(transmission)
+      end)
+    end
+  end
+
+  describe "is_transmitted?/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "transmitted"),
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "incomplete"),
+        insert(:transmission, state: "canceled"),
+        insert(:transmission, state: "failed")
+      ]
+
+      {:ok, transmissions: transmissions}
+    end
+
+    test "should returns true when receive a transmission with 'transmitted' state", %{
+      transmissions: [transmission | _]
+    } do
+      assert Transmission.is_transmitted?(transmission)
+    end
+
+    test "should returns false when receive a transmission without 'transmitted' state", %{
+      transmissions: [_ | transmissions]
+    } do
+      Enum.each(transmissions, fn transmission ->
+        refute Transmission.is_transmitted?(transmission)
+      end)
+    end
+  end
+
+  describe "is_partial?/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "transmitted"),
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "incomplete"),
+        insert(:transmission, state: "canceled"),
+        insert(:transmission, state: "failed")
+      ]
+
+      {:ok, transmissions: transmissions}
+    end
+
+    test "should returns true when receive a transmission with 'partial' state", %{
+      transmissions: [transmission | _]
+    } do
+      assert Transmission.is_partial?(transmission)
+    end
+
+    test "should returns false when receive a transmission without 'partial' state", %{
+      transmissions: [_ | transmissions]
+    } do
+      Enum.each(transmissions, fn transmission ->
+        refute Transmission.is_partial?(transmission)
+      end)
+    end
+  end
+
+  describe "is_complete?/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "transmitted"),
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "incomplete"),
+        insert(:transmission, state: "canceled"),
+        insert(:transmission, state: "failed")
+      ]
+
+      {:ok, transmissions: transmissions}
+    end
+
+    test "should returns true when receive a transmission with 'complete' state", %{
+      transmissions: [transmission | _]
+    } do
+      assert Transmission.is_complete?(transmission)
+    end
+
+    test "should returns false when receive a transmission without 'complete' state", %{
+      transmissions: [_ | transmissions]
+    } do
+      Enum.each(transmissions, fn transmission ->
+        refute Transmission.is_complete?(transmission)
+      end)
+    end
+  end
+
+  describe "is_incomplete?/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "incomplete"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "transmitted"),
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "canceled"),
+        insert(:transmission, state: "failed")
+      ]
+
+      {:ok, transmissions: transmissions}
+    end
+
+    test "should returns true when receive a transmission with 'incomplete' state", %{
+      transmissions: [transmission | _]
+    } do
+      assert Transmission.is_incomplete?(transmission)
+    end
+
+    test "should returns false when receive a transmission without 'incomplete' state", %{
+      transmissions: [_ | transmissions]
+    } do
+      Enum.each(transmissions, fn transmission ->
+        refute Transmission.is_incomplete?(transmission)
+      end)
+    end
+  end
+
+  describe "is_failed?/1" do
+    setup do
+      transmissions = [
+        insert(:transmission, state: "failed"),
+        insert(:transmission, state: "incomplete"),
+        insert(:transmission, state: "complete"),
+        insert(:transmission, state: "partial"),
+        insert(:transmission, state: "transmitted"),
+        insert(:transmission, state: "scheduled"),
+        insert(:transmission, state: "performing"),
+        insert(:transmission, state: "canceled")
+      ]
+
+      {:ok, transmissions: transmissions}
+    end
+
+    test "should returns true when receive a transmission with 'failed' state", %{
+      transmissions: [transmission | _]
+    } do
+      assert Transmission.is_failed?(transmission)
+    end
+
+    test "should returns false when receive a transmission without 'failed' state", %{
+      transmissions: [_ | transmissions]
+    } do
+      Enum.each(transmissions, fn transmission ->
+        refute Transmission.is_failed?(transmission)
+      end)
+    end
+  end
 end
