@@ -1,0 +1,27 @@
+{
+	"default_stop_words": [
+		"defmodule",
+		"defrecord",
+		"defimpl",
+		"def.+(.+\/\/.+).+do"
+	],
+	"custom_stop_words": [],
+	"coverage_options": {
+		"treat_no_relevant_lines_as_covered": true,
+		"output_dir": "cover/",
+		"minimum_coverage": 90
+	},
+	"skip_files": [
+		"test/",
+		"lib/adam.ex",
+		"lib/adam/application.ex",
+		"lib/adam/repo.ex",
+		"lib/adam/pub_sub.ex",
+		"lib/adam_web.ex",
+		"lib/adam_web/endpoint.ex",
+		"lib/adam_web/gettext.ex",
+		"lib/adam_web/information.ex",
+		"lib/adam_web/router.ex",
+		"lib/adam_web/telemetry.ex"
+	]
+}
