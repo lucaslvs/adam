@@ -46,10 +46,14 @@ defmodule Adam.Communication.Transmission.Machinery do
 
   @doc false
   def persist(transmission, next_state) do
-    {:ok, %{transmission: transmission}} =
-      Information.create_transmission_state(transmission, next_state)
+    if Information.transmission_already_had_in?(transmission, next_state) do
+      {:error, "The transmission already had in #{next_state}."}
+    else
+      {:ok, %{transmission: transmission}} =
+        Information.create_transmission_state(transmission, next_state)
 
-    transmission
+      transmission
+    end
   end
 
   @doc false
@@ -64,14 +68,6 @@ defmodule Adam.Communication.Transmission.Machinery do
 
   def guard_transition(%Transmission{state: state}, next_state) when state == next_state do
     {:error, "The transmission is already #{next_state}."}
-  end
-
-  def guard_transition(transmission, next_state) do
-    if Information.transmission_already_had_in?(transmission, next_state) do
-      {:error, "The transmission already had in #{next_state}."}
-    else
-      transmission
-    end
   end
 
   @doc false
