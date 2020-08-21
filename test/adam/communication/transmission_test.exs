@@ -9,19 +9,45 @@ defmodule Adam.Communication.TransmissionTest do
     @valid_attrs %{label: "some label", scheduled_at: ~N[2010-04-17 14:00:00]}
     @invalid_attrs %{label: nil, scheduled_at: nil}
 
-    test "should returns a valid transmission" do
-      received = Transmission.changeset(struct!(Transmission), @valid_attrs)
-
-      assert %Ecto.Changeset{valid?: true, changes: changes} = received
-      assert %{label: "some label", scheduled_at: ~N[2010-04-17 14:00:00]} = changes
+    setup do
+      {:ok, transmission: struct!(Transmission)}
     end
 
-    test "should returns a changeset with errors" do
-      received = Transmission.changeset(struct!(Transmission), @invalid_attrs)
+    test "should returns a valid transmission", %{transmission: transmission} do
+      received = Transmission.changeset(transmission, @valid_attrs)
+
+      assert %Ecto.Changeset{valid?: true, changes: changes} = received
+      assert @valid_attrs = changes
+    end
+
+    test "should returns a changeset with errors", %{transmission: transmission} do
+      received = Transmission.changeset(transmission, @invalid_attrs)
 
       assert %Ecto.Changeset{valid?: false} = received
     end
   end
+
+  # describe "schedule_changeset/2" do
+  #   @valid_attrs %{label: "some label", scheduled_at: ~N[2010-04-17 14:00:00]}
+  #   @invalid_attrs %{label: nil, scheduled_at: nil}
+
+  #   setup do
+  #     {:ok, transmission: struct!(Transmission)}
+  #   end
+
+  #   test "should returns a valid transmission", %{transmission: transmission} do
+  #     received = Transmission.schedule_changeset(transmission, @valid_attrs)
+
+  #     assert %Ecto.Changeset{valid?: true, changes: changes} = received
+  #     assert @valid_attrs = changes
+  #   end
+
+  #   test "should returns a changeset with errors", %{transmission: transmission} do
+  #     received = Transmission.schedule_changeset(transmission, @invalid_attrs)
+
+  #     assert %Ecto.Changeset{valid?: false} = received
+  #   end
+  # end
 
   describe "to_perform/1" do
     setup do
