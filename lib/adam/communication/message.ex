@@ -103,7 +103,8 @@ defmodule Adam.Communication.Message do
 
   defp has_subject_content?(contents) do
     Enum.any?(contents, fn content ->
-      Map.get(content, :name) == "subject" or Map.get(content, "name") == "subject"
+      content_name = Map.get(content, "name") || Map.get(content, :name)
+      Enum.member?([:subject, "subject"], content_name)
     end)
   end
 
