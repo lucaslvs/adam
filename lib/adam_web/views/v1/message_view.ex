@@ -14,7 +14,7 @@ defmodule AdamWeb.V1.MessageView do
       messages: render_many(page.entries, MessageView, "message.json"),
       page_number: page.page_number,
       page_size: page.page_size,
-      total_transmissions: page.total_entries,
+      total_messages: page.total_entries,
       total_pages: page.total_pages
     }
   end
