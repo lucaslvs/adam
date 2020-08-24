@@ -15,6 +15,16 @@ defmodule Adam.Factory do
     }
   end
 
+  def message_factory do
+    %Message{
+      contents: [%{name: "subject", value: "some subject"}],
+      type: "email",
+      provider: "sendgrid",
+      sender: "sender@email.com",
+      receiver: "receiver@email.com"
+    }
+  end
+
   def state_factory(attrs), do: struct!(State, attrs)
 
   @doc false

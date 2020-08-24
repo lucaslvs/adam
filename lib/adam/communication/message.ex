@@ -30,11 +30,12 @@ defmodule Adam.Communication.Message do
     attrs = transform_contents_attributes(attrs)
 
     message
-    |> cast(attrs, @required_fields ++ [:state])
+    |> cast(attrs, @required_fields ++ [:state, :transmission_id])
     |> validate_required(@required_fields)
     |> validate_inclusion(:type, @types)
     |> validate_provider()
     |> validate_email_contents(attrs)
+    |> assoc_constraint(:transmission)
     |> cast_assoc(:contents, with: &Content.message_changeset/2, required: true)
   end
 
@@ -117,8 +118,8 @@ defmodule Adam.Communication.Message do
   end
 
   defp take_creation_permitted_attributes(attrs) do
-    creation_permitted_attributes =
-      Enum.map(@required_fields, &to_string/1) ++ [:contents, "contents"]
+    other_fields = [:contents, "contents", :transmission_id, "transmission_id"]
+    creation_permitted_attributes = Enum.map(@required_fields, &to_string/1) ++ other_fields
 
     Map.take(attrs, @required_fields ++ creation_permitted_attributes)
   end
