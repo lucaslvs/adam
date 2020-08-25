@@ -59,33 +59,6 @@ defmodule Adam.Communication.Transmission do
     end
   end
 
-  @doc false
-  @spec schedule_changeset(transmission(), map()) :: Ecto.Changeset.t()
-  def schedule_changeset(transmission, attrs) do
-    transmission
-    |> changeset(take_creation_permitted_attributes(attrs))
-    |> add_scheduled_state()
-    |> cast_assoc(:states, with: &State.transmission_changeset/2, required: true)
-    |> cast_assoc(:messages, with: &Message.create_changeset/2, required: true)
-  end
-
-  defp take_creation_permitted_attributes(attrs) do
-    Map.take(attrs, [
-      :label,
-      :scheduled_at,
-      :messages,
-      :contents,
-      "label",
-      "scheduled_at",
-      "messages",
-      "contents"
-    ])
-  end
-
-  defp add_scheduled_state(changeset) do
-    put_change(changeset, :states, [%{value: "scheduled"}])
-  end
-
   @doc """
   TODO
   """

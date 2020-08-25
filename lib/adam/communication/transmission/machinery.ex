@@ -26,7 +26,6 @@ defmodule Adam.Communication.Transmission.Machinery do
   alias Adam.Communication
   alias Adam.Communication.Transmission
   alias Adam.Information
-  alias Adam.PubSub
 
   @doc false
   def before_transition(%Transmission{id: id}, _next_state) do
@@ -35,13 +34,9 @@ defmodule Adam.Communication.Transmission.Machinery do
 
   @doc false
   def after_transition(transmission, state) do
-    broadcast_transition(transmission, state)
+    :ok = Communication.broadcast_transmission(transmission, state)
 
     transmission
-  end
-
-  defp broadcast_transition(%Transmission{id: id} = transmission, state) when is_binary(state) do
-    PubSub.broadcast("transmission:#{id}", {String.to_atom(state), transmission})
   end
 
   @doc false

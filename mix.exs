@@ -58,6 +58,7 @@ defmodule Adam.MixProject do
       {:machinery, "~> 1.0.0"},
       {:ex_machina, "~> 2.4"},
       {:scrivener_ecto, "~> 2.0"},
+      {:exop, "~> 1.4.1"},
       {:casex, "~> 0.4.0"},
       {:xcribe, "~> 0.7.3"},
       {:ex_doc, "~> 0.22.2", only: :dev, runtime: false},

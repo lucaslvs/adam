@@ -27,44 +27,6 @@ defmodule Adam.Communication.TransmissionTest do
     end
   end
 
-  describe "schedule_changeset/2" do
-    @valid_attrs %{
-      label: "some label",
-      scheduled_at: ~N[2010-04-17 14:00:00],
-      contents: %{some: "content"},
-      messages: [
-        %{
-          contents: %{subject: "some subject"},
-          type: "email",
-          provider: "sendgrid",
-          sender: "sender@email.com",
-          receiver: "receiver@email.com"
-        }
-      ]
-    }
-    @invalid_attrs %{
-      label: nil,
-      scheduled_at: nil,
-      messages: []
-    }
-
-    setup do
-      {:ok, transmission: struct!(Transmission)}
-    end
-
-    test "should returns a valid transmission", %{transmission: transmission} do
-      changeset = Transmission.schedule_changeset(transmission, @valid_attrs)
-
-      assert %Ecto.Changeset{valid?: true} = changeset
-    end
-
-    test "should returns a changeset with errors", %{transmission: transmission} do
-      changeset = Transmission.schedule_changeset(transmission, @invalid_attrs)
-
-      assert %Ecto.Changeset{valid?: false} = changeset
-    end
-  end
-
   describe "to_perform/1" do
     setup do
       transmissions = [

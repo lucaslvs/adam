@@ -3,8 +3,14 @@ defmodule Adam.Communication do
   The Communication context.
   """
 
-  alias Adam.Repo
-  alias __MODULE__.{Content, Transmission, Message}
+  alias Adam.{Repo, PubSub}
+
+  alias __MODULE__.{
+    Content,
+    Transmission,
+    Message,
+    ScheduleTransmissionService
+  }
 
   @doc """
   Returns a `Scriviner.Page` with a list of `Transmission`s filtered by the given attributes.
@@ -111,10 +117,27 @@ defmodule Adam.Communication do
 
   """
   def schedule_transmission(attrs \\ %{}) do
-    Transmission
-    |> struct!()
-    |> Transmission.schedule_changeset(attrs)
-    |> Repo.insert()
+    with {:ok, %Transmission{} = transmission} <- ScheduleTransmissionService.run(attrs),
+         :ok <- broadcast_transmission(transmission, :scheduled) do
+      {:ok, transmission}
+    else
+      schedule_transmission_error ->
+        schedule_transmission_error
+    end
+  end
+
+  @doc """
+  Broadcast a `Transmission` event in `Adam.PubSub`
+
+  ## Examples
+  TODO
+  """
+  def broadcast_transmission(%Transmission{} = transmission, event) when is_binary(event) do
+    broadcast_transmission(transmission, String.to_atom(event))
+  end
+
+  def broadcast_transmission(%Transmission{id: id} = transmission, event) when is_atom(event) do
+    PubSub.broadcast("transmission:#{id}", {event, transmission})
   end
 
   @doc """
