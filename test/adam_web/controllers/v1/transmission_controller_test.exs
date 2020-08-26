@@ -1,14 +1,9 @@
 defmodule AdamWeb.V1.TransmissionControllerTest do
   use AdamWeb.ConnCase
 
-  import Adam.Factory
-
-  alias Adam.Communication
-  alias Adam.Communication.Transmission
-
   @create_attrs %{
     label: "some label",
-    scheduled_at: ~N[2010-04-17 14:00:00],
+    scheduled_at: "2010-04-17 14:00:00",
     contents: %{some: "content"},
     messages: [
       %{
@@ -77,9 +72,5 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
       conn = post(conn, Routes.v1_transmission_path(conn, :create), transmission: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
-  end
-
-  defp create_transmission(_) do
-    %{transmission: insert(:transmission)}
   end
 end

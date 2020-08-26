@@ -47,7 +47,7 @@ defmodule Adam.Communication.Content do
     )
   end
 
-  def transform_in_attributes(attrs) when is_map(attrs) do
+  def transform_parameters(attrs) when is_map(attrs) do
     Enum.map(attrs, fn
       {name, value} when is_atom(name) ->
         Map.new(name: to_string(name), value: value)

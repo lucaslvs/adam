@@ -58,10 +58,10 @@ defmodule Adam.Communication.Message do
   defp transform_contents_attributes(attrs) do
     case attrs do
       %{contents: contents} when is_map(contents) ->
-        Map.put(attrs, :contents, Content.transform_in_attributes(contents))
+        Map.put(attrs, :contents, Content.transform_parameters(contents))
 
       %{"contents" => contents} when is_map(contents) ->
-        Map.put(attrs, "contents", Content.transform_in_attributes(contents))
+        Map.put(attrs, "contents", Content.transform_parameters(contents))
 
       attrs ->
         attrs

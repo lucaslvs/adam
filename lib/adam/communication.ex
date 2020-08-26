@@ -121,8 +121,14 @@ defmodule Adam.Communication do
          :ok <- broadcast_transmission(transmission, :scheduled) do
       {:ok, transmission}
     else
-      schedule_transmission_error ->
-        schedule_transmission_error
+      {:error, {:validation, errors}} ->
+        {:error, errors}
+
+      {:interrupt, errors} ->
+        {:error, errors}
+
+      errors ->
+        errors
     end
   end
 

@@ -10,7 +10,7 @@ defmodule Adam.CommunicationTest do
 
     @valid_attrs %{
       label: "some label",
-      scheduled_at: ~N[2010-04-17 14:00:00],
+      scheduled_at: "2010-04-17 14:00:00",
       contents: %{some: "content"},
       messages: [
         %{
@@ -24,7 +24,7 @@ defmodule Adam.CommunicationTest do
     }
     @update_attrs %{
       label: "some updated label",
-      scheduled_at: ~N[2011-05-18 15:01:01],
+      scheduled_at: "2011-05-18 15:01:01",
       state: "some updated state"
     }
     @invalid_attrs %{
@@ -49,7 +49,7 @@ defmodule Adam.CommunicationTest do
     end
 
     test "create_transmission/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Communication.schedule_transmission(@invalid_attrs)
+      assert {:error, %{contents: ["is required"], label: ["doesn't allow nil"], scheduled_at: ["doesn't allow nil"]}} = Communication.schedule_transmission(@invalid_attrs)
     end
 
     test "change_transmission/1 returns a transmission changeset" do
@@ -61,13 +61,6 @@ defmodule Adam.CommunicationTest do
   describe "messages" do
     alias Adam.Communication.Message
 
-    @valid_attrs %{
-      contents: %{subject: "some subject"},
-      type: "email",
-      provider: "sendgrid",
-      sender: "sender@email.com",
-      receiver: "receiver@email.com"
-    }
     @update_attrs %{
       type: "sms",
       provider: "wavy",

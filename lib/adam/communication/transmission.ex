@@ -30,22 +30,9 @@ defmodule Adam.Communication.Transmission do
   @spec changeset(transmission(), map()) :: Ecto.Changeset.t()
   def changeset(transmission, attrs) do
     transmission
-    |> cast(maybe_transform_contents_attributes(attrs), [:label, :state, :scheduled_at])
+    |> cast(attrs, [:label, :state, :scheduled_at])
     |> validate_required([:label])
     |> maybe_schedule_for_now()
-  end
-
-  defp maybe_transform_contents_attributes(attrs) do
-    case attrs do
-      %{contents: contents} when is_map(contents) ->
-        Map.put(attrs, :contents, Content.transform_in_attributes(contents))
-
-      %{"contents" => contents} when is_map(contents) ->
-        Map.put(attrs, "contents", Content.transform_in_attributes(contents))
-
-      attrs ->
-        attrs
-    end
   end
 
   defp maybe_schedule_for_now(changeset) do
