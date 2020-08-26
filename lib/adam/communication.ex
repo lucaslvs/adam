@@ -42,7 +42,7 @@ defmodule Adam.Communication do
       ** (Ecto.NoResultsError)
 
   """
-  def get_transmission!(id, preload \\ []) do
+  def get_transmission!(id, preload \\ []) when is_integer(id) or is_binary(id) do
     Transmission
     |> Repo.get!(id)
     |> Repo.preload(preload)
@@ -60,7 +60,7 @@ defmodule Adam.Communication do
       {:error, :not_found}
 
   """
-  def get_transmission(id, preload \\ []) do
+  def get_transmission(id, preload \\ []) when is_integer(id) or is_binary(id) do
     {:ok, get_transmission!(id, preload)}
   rescue
     Ecto.NoResultsError ->
@@ -205,7 +205,7 @@ defmodule Adam.Communication do
       ** (Ecto.NoResultsError)
 
   """
-  def get_message!(id, preload \\ []) do
+  def get_message!(id, preload \\ []) when is_integer(id) or is_binary(id) do
     Message
     |> Repo.get!(id)
     |> Repo.preload(preload)
@@ -223,7 +223,7 @@ defmodule Adam.Communication do
       {:error, :not_found}
 
   """
-  def get_message(id, preload \\ []) do
+  def get_message(id, preload \\ []) when is_integer(id) or is_binary(id) do
     {:ok, get_message!(id, preload)}
   rescue
     Ecto.NoResultsError ->
