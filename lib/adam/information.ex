@@ -3,13 +3,9 @@ defmodule Adam.Information do
   The Information context.
   """
 
-  import Adam.Factory
-
   alias Adam.Repo
-  alias Adam.Communication
   alias Adam.Communication.{Transmission, Message}
-  alias __MODULE__.{State, CreateTransmissionStateService}
-  alias Ecto.Multi
+  alias __MODULE__.{State, CreateTransmissionStateService, CreateMessageStateService}
 
   @doc """
   Returns a `Scriviner.Page` with a list of `State`s filtered by the given attributes.
@@ -141,19 +137,12 @@ defmodule Adam.Information do
   TODO insert examples
   """
   def create_message_state(%Message{} = message, state) when is_binary(state) do
-    Multi.new()
-    |> Multi.update(:message, message_changeset(message, state))
-    |> Multi.insert(:state, &build_message_state/1)
-    |> Repo.transaction()
-  end
+    case CreateMessageStateService.run(message: message, state: state) do
+      {:error, {:validation, errors}} ->
+        {:error, errors}
 
-  defp message_changeset(message, next_state) do
-    Communication.change_message(message, %{state: next_state})
-  end
-
-  defp build_message_state(%{message: message}) do
-    :message_state
-    |> build(message: message)
-    |> State.message_changeset(%{value: message.state})
+      create_message_state_result ->
+        create_message_state_result
+    end
   end
 end

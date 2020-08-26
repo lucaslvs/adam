@@ -48,7 +48,7 @@ defmodule Adam.Communication.Message.Machinery do
 
   @doc false
   def persist(message, next_state) do
-    {:ok, %{message: message}} = Information.create_message_state(message, next_state)
+    {:ok, message} = Information.create_message_state(message, next_state)
 
     message
   end
