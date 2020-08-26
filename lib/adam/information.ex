@@ -111,6 +111,21 @@ defmodule Adam.Information do
   end
 
   @doc """
+  Creates a new `State` for the given `Message`.
+
+  TODO insert examples
+  """
+  def create_message_state(%Message{} = message, state) when is_binary(state) do
+    case CreateMessageStateService.run(message: message, state: state) do
+      {:error, {:validation, errors}} ->
+        {:error, errors}
+
+      create_message_state_result ->
+        create_message_state_result
+    end
+  end
+
+  @doc """
   List all `State`s by the given `Message`.
 
   ## Examples
@@ -128,21 +143,6 @@ defmodule Adam.Information do
       message
       |> Ecto.assoc(:states)
       |> Repo.all()
-    end
-  end
-
-  @doc """
-  Creates a new `State` for the given `Message`.
-
-  TODO insert examples
-  """
-  def create_message_state(%Message{} = message, state) when is_binary(state) do
-    case CreateMessageStateService.run(message: message, state: state) do
-      {:error, {:validation, errors}} ->
-        {:error, errors}
-
-      create_message_state_result ->
-        create_message_state_result
     end
   end
 end
