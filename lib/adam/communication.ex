@@ -127,8 +127,8 @@ defmodule Adam.Communication do
       {:interrupt, errors} ->
         {:error, errors}
 
-      errors ->
-        errors
+      schedule_transmission_error ->
+        schedule_transmission_error
     end
   end
 

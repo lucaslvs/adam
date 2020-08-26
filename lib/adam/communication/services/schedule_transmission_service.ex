@@ -1,8 +1,12 @@
 defmodule Adam.Communication.ScheduleTransmissionService do
-  use Adam, :service
+  use Exop.Operation
+
+  import Ecto.Changeset
+  import Exop.Operation
 
   alias Adam.Communication.{Content, Transmission, Message}
   alias Adam.Information.State
+  alias Adam.Repo
 
   @scheduled_at_format ~r/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/
 

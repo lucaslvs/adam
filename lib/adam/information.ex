@@ -8,7 +8,7 @@ defmodule Adam.Information do
   alias Adam.Repo
   alias Adam.Communication
   alias Adam.Communication.{Transmission, Message}
-  alias Adam.Information.State
+  alias __MODULE__.{State, CreateTransmissionStateService}
   alias Ecto.Multi
 
   @doc """
@@ -105,20 +105,13 @@ defmodule Adam.Information do
   TODO insert examples
   """
   def create_transmission_state(%Transmission{} = transmission, state) when is_binary(state) do
-    Multi.new()
-    |> Multi.update(:transmission, transmission_changeset(transmission, state))
-    |> Multi.insert(:state, &build_transmission_state/1)
-    |> Repo.transaction()
-  end
+    case CreateTransmissionStateService.run(transmission: transmission, state: state) do
+      {:error, {:validation, errors}} ->
+        {:error, errors}
 
-  defp transmission_changeset(transmission, next_state) do
-    Communication.change_transmission(transmission, %{state: next_state})
-  end
-
-  defp build_transmission_state(%{transmission: transmission}) do
-    :transmission_state
-    |> build(transmission: transmission)
-    |> State.transmission_changeset(%{value: transmission.state})
+      create_transmission_state_result ->
+        create_transmission_state_result
+    end
   end
 
   @doc """

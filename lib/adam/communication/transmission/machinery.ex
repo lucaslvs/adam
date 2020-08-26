@@ -41,15 +41,14 @@ defmodule Adam.Communication.Transmission.Machinery do
 
   @doc false
   def persist(transmission, next_state) do
-    {:ok, %{transmission: transmission}} =
-      Information.create_transmission_state(transmission, next_state)
+    {:ok, transmission} = Information.create_transmission_state(transmission, next_state)
 
     transmission
   end
 
   @doc false
   def guard_transition(%Transmission{scheduled_at: scheduled_at} = transmission, "performing") do
-    if scheduled_at > NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second) do
+    if is_not_scheduled_time?(scheduled_at) do
       scheduled_at = NaiveDateTime.to_string(scheduled_at)
       {:error, "Cannot perform because it is scheduled to #{scheduled_at}."}
     else
@@ -60,6 +59,10 @@ defmodule Adam.Communication.Transmission.Machinery do
   def guard_transition(%Transmission{state: state}, next_state) when state == next_state do
     {:error, "The transmission is already #{next_state}."}
   end
+
+  defp is_not_scheduled_time?(scheduled_at), do: scheduled_at > now()
+
+  defp now, do: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
 
   @doc false
   def log_transition(%Transmission{id: id} = transmission, next_state) do

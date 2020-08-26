@@ -49,7 +49,12 @@ defmodule Adam.CommunicationTest do
     end
 
     test "create_transmission/1 with invalid data returns error changeset" do
-      assert {:error, %{contents: ["is required"], label: ["doesn't allow nil"], scheduled_at: ["doesn't allow nil"]}} = Communication.schedule_transmission(@invalid_attrs)
+      assert {:error,
+              %{
+                contents: ["is required"],
+                label: ["doesn't allow nil"],
+                scheduled_at: ["doesn't allow nil"]
+              }} = Communication.schedule_transmission(@invalid_attrs)
     end
 
     test "change_transmission/1 returns a transmission changeset" do
