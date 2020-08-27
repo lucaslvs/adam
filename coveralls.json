@@ -22,6 +22,10 @@
 		"lib/adam_web/gettext.ex",
 		"lib/adam_web/information.ex",
 		"lib/adam_web/router.ex",
-		"lib/adam_web/telemetry.ex"
+		"lib/adam_web/telemetry.ex",
+		"lib/adam_web/controllers/fallback_controller.ex",
+		"lib/adam_web/views/changeset_view.ex",
+		"lib/adam_web/views/error_helpers.ex",
+		"lib/adam_web/views/error_view.ex"
 	]
 }
