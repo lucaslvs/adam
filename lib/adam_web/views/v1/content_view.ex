@@ -5,10 +5,6 @@ defmodule AdamWeb.V1.ContentView do
 
   alias AdamWeb.V1.ContentView
 
-  def render("contents.json", %{contents: contents}) do
-    render_many_contents(contents)
-  end
-
   def render("content.json", %{content: content}) do
     Map.new("#{content.name}": content.value)
   end
