@@ -5,10 +5,6 @@ defmodule AdamWeb.V1.TransmissionView do
 
   alias AdamWeb.V1.{ContentView, TransmissionView, MessageView}
 
-  def render("index.json", %{transmissions: transmissions}) do
-    %{transmissions: render_many(transmissions, TransmissionView, "transmission.json")}
-  end
-
   def render("index.json", %{page: %Scrivener.Page{} = page}) do
     %{
       transmissions: render_many(page.entries, TransmissionView, "transmission.json"),

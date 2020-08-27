@@ -5,10 +5,6 @@ defmodule AdamWeb.V1.MessageView do
 
   alias AdamWeb.V1.{ContentView, MessageView}
 
-  def render("index.json", %{messages: messages}) do
-    %{messages: render_many(messages, MessageView, "message.json")}
-  end
-
   def render("index.json", %{page: %Scrivener.Page{} = page}) do
     %{
       messages: render_many(page.entries, MessageView, "message.json"),
