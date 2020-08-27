@@ -9,8 +9,9 @@ defmodule Adam.CommunicationTest do
     alias Adam.Communication.Transmission
 
     @valid_attrs %{
-      label: "some label",
-      scheduled_at: "2010-04-17 14:00:00",
+      label: "label",
+      scheduled_at:
+        NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second) |> NaiveDateTime.to_string(),
       contents: %{some: "content"},
       messages: [
         %{
@@ -23,13 +24,16 @@ defmodule Adam.CommunicationTest do
       ]
     }
     @update_attrs %{
-      label: "some updated label",
-      scheduled_at: "2011-05-18 15:01:01",
-      state: "some updated state"
+      label: "updated_label",
+      scheduled_at:
+        NaiveDateTime.utc_now()
+        |> NaiveDateTime.truncate(:second)
+        |> NaiveDateTime.add(1)
+        |> NaiveDateTime.to_string()
     }
     @invalid_attrs %{
       label: nil,
-      scheduled_at: nil,
+      scheduled_at: "2010-04-17 14:00:00",
       messages: []
     }
 
@@ -43,8 +47,11 @@ defmodule Adam.CommunicationTest do
       assert {:ok, %Transmission{} = transmission} =
                Communication.schedule_transmission(@valid_attrs)
 
-      assert transmission.label == "some label"
-      assert transmission.scheduled_at == ~N[2010-04-17 14:00:00]
+      assert transmission.label == "label"
+
+      assert transmission.scheduled_at ==
+               @valid_attrs |> Map.get(:scheduled_at) |> NaiveDateTime.from_iso8601!()
+
       assert transmission.state == "scheduled"
     end
 
@@ -52,8 +59,7 @@ defmodule Adam.CommunicationTest do
       assert {:error,
               %{
                 contents: ["is required"],
-                label: ["doesn't allow nil"],
-                scheduled_at: ["doesn't allow nil"]
+                label: ["doesn't allow nil"]
               }} = Communication.schedule_transmission(@invalid_attrs)
     end
 

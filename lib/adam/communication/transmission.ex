@@ -11,12 +11,14 @@ defmodule Adam.Communication.Transmission do
   alias Adam.Information.State
   alias __MODULE__.Query
 
+  @scheduled_at_now NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
+
   @typedoc "The transmission entity"
   @type transmission :: Transmission.t()
 
   schema "transmissions" do
     field :label, :string, null: false
-    field :scheduled_at, :naive_datetime, null: false
+    field :scheduled_at, :naive_datetime, null: false, default: @scheduled_at_now
     field :state, :string, default: "scheduled"
 
     has_many :states, State
@@ -32,19 +34,28 @@ defmodule Adam.Communication.Transmission do
     transmission
     |> cast(attrs, [:label, :state, :scheduled_at])
     |> validate_required([:label])
-    |> maybe_schedule_for_now()
+    |> validate_scheduled_at()
   end
 
-  defp maybe_schedule_for_now(changeset) do
+  defp validate_scheduled_at(changeset) do
     case changeset do
-      %Ecto.Changeset{changes: %{scheduled_at: _scheduled_at}} ->
-        changeset
+      %Ecto.Changeset{changes: %{scheduled_at: scheduled_at}} ->
+        maybe_invalidate_schedule_in_past(changeset, scheduled_at)
 
-      %Ecto.Changeset{} ->
-        scheduled_at = NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
-        put_change(changeset, :scheduled_at, scheduled_at)
+      changeset ->
+        changeset
     end
   end
+
+  defp maybe_invalidate_schedule_in_past(changeset, scheduled_at) do
+    if scheduled_at < now() do
+      add_error(changeset, :scheduled_at, "Cannot schedule transmission in past")
+    else
+      changeset
+    end
+  end
+
+  defp now, do: @scheduled_at_now
 
   @doc """
   TODO

@@ -6,8 +6,11 @@ defmodule Adam.Communication.TransmissionTest do
   alias Adam.Communication.Transmission
 
   describe "changeset/2" do
-    @valid_attrs %{label: "some label", scheduled_at: ~N[2010-04-17 14:00:00]}
-    @invalid_attrs %{label: nil, scheduled_at: nil}
+    @valid_attrs %{
+      label: "label",
+      scheduled_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
+    }
+    @invalid_attrs %{label: nil, scheduled_at: ~N[2010-04-17 14:00:00]}
 
     setup do
       {:ok, transmission: struct!(Transmission)}

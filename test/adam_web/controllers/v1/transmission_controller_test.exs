@@ -2,8 +2,9 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
   use AdamWeb.ConnCase
 
   @create_attrs %{
-    label: "some label",
-    scheduled_at: "2010-04-17 14:00:00",
+    label: "label",
+    scheduled_at:
+      NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second) |> NaiveDateTime.to_string(),
     contents: %{some: "content"},
     messages: [
       %{
@@ -17,7 +18,7 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
   }
   @invalid_attrs %{
     label: nil,
-    scheduled_at: nil,
+    scheduled_at: "2010-04-17 14:00:00",
     messages: []
   }
 
@@ -42,6 +43,7 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
   describe "create transmission" do
     test "renders transmission when data is valid", %{conn: conn} do
       conn = post(conn, Routes.v1_transmission_path(conn, :create), transmission: @create_attrs)
+
       assert %{"id" => id} = json_response(conn, 202)["transmission"]
 
       conn = get(conn, Routes.v1_transmission_path(conn, :show, id))
@@ -50,7 +52,8 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
                "transmission" => %{
                  "contents" => %{},
                  "id" => id,
-                 "label" => "some label",
+                 "label" => "label",
+                 "state" => "scheduled",
                  "messages" => [
                    %{
                      "contents" => %{"subject" => "some subject"},
@@ -61,15 +64,14 @@ defmodule AdamWeb.V1.TransmissionControllerTest do
                      "transmissionId" => id,
                      "type" => "email"
                    }
-                 ],
-                 "scheduledAt" => "2010-04-17T14:00:00",
-                 "state" => "scheduled"
+                 ]
                }
              } = json_response(conn, 200)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.v1_transmission_path(conn, :create), transmission: @invalid_attrs)
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
